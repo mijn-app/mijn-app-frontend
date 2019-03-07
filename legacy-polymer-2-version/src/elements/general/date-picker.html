@@ -1,0 +1,577 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<!-- JS imports -->
+<script src="../../../bower_components/web-animations-js/web-animations.min.js"></script>
+
+
+<dom-module id="date-picker">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                max-width: 100vw;
+                width: 100vw;
+            }
+
+            #calendarHeader {
+                height: 44px;
+                padding-left: 16px;
+                padding-right: 16px;
+                background-color: var(--background-white);
+            }
+
+            #calendarDisplayWrapper {
+                position: relative;
+                width: 100vw;
+                overflow-x: hidden;
+                max-width: 100vw;
+                height: 269px;
+            }
+
+            #calendarDisplay {
+                position: absolute;
+                top: 0;
+                left: -100vw;
+                background-color: var(--background-white);
+            }
+
+            .dayWrapper {
+                width: calc(100vw / 7);
+                height: calc(100vw / 7);
+                font-size: 18px;
+                font-family: var(--main-font);
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: normal;
+                text-align: center;
+            }
+
+            .active {
+                color: var(--dark-blue-grey);
+                background-color: var(--search-input-grey);
+
+            }
+
+            .day {
+                width: 33px;
+                height: 33px;
+                border-radius: 33px;
+            }
+
+            .selected {
+                background-color: var(--active-green);
+
+            }
+
+            .inActive {
+                color: var(--inactive-grey);
+            }
+
+            .arrow {
+                width: 0;
+                height: 0;
+                margin-left: 10px;
+                border-left: 15px solid transparent;
+                border-right: 15px solid transparent;
+                border-bottom: 15px solid var(--background-white);
+            }
+
+            img {
+                width: 16px;
+                height: 16px;
+            }
+
+            .curMonth {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.4px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .notClickable {
+                opacity: 0.5;
+            }
+
+            #popupMessage {
+                display: none;
+                position: absolute;
+                z-index: 9999;
+                left: 0;
+                right: 0;
+                margin-left: auto;
+                margin-right: auto;
+                top: 0px;
+                width: 325px;
+                max-width: 325px;
+            }
+
+            #popupTextWrapper {
+                border-radius: 3px;
+                padding: 14px;
+                background-color: var(--dark-blue-grey);
+                font-family: var(--main-font);
+                font-size: 14px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.14;
+                letter-spacing: -0.2px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            #pointer {
+                width: 0;
+                height: 0;
+                border-left: 15px solid transparent;
+                border-right: 15px solid transparent;
+                border-top: 15px solid var(--dark-blue-grey);
+            }
+
+            #gotoWrapper {
+                margin-top: 16px;
+            }
+
+            #goToArrow {
+                margin-right: 8px;
+            }
+        </style>
+        <div id="popupMessage" class="layout vertical">
+            <div id="popupTextWrapper" class="layout vertical">
+                <div>
+                    De door jou gekozen [[popupMessageText]] is deze dag niet beschikbaar. Als je deze datum kiest, krijg je een andere [[popupMessageText]].
+                </div>
+                <div on-click="_goto" id="gotoWrapper" class="layout horizontal">
+                    <img id="goToArrow" src="images/icons/arrow-left.svg">Kies andere [[popupMessageText]]
+                </div>
+            </div>
+            <div id="pointer">
+
+            </div>
+        </div>
+        <div class="arrow">
+
+        </div>
+
+        <div id="calendarHeader" class="layout horizontal">
+            <div on-click="_prevMonthClicked" class="layout vertical center-justified">
+                <img src="images/icons/nav-arrow-left.svg">
+            </div>
+            <div class="flex"></div>
+            <div class="curMonth layout vertical center-justified">[[curMonth]]</div>
+            <div class="flex"> </div>
+            <div on-click="_nextMonthClicked" class="layout vertical center-justified">
+                <img src="images/icons/nav-arrow-right.svg">
+            </div>
+        </div>
+        <div id="calendarDisplayWrapper">
+            <div id="calendarDisplay" class="layout horizontal">
+                <template is="dom-repeat" items="[[calendarArray]]" as="calendar">
+                    <div>
+                        <template is="dom-repeat" items="[[calendar]]" as="week">
+                            <div class="layout horizontal">
+                                <template is="dom-repeat" items="[[week]]" as="date">
+                                    <div class$="[[_getClasses(date)]]">
+                                        <div class="layout horizontal center-justified">
+                                            <div id="[[_getIDForDay(date)]]" class$="[[_getClassesDay(date)]]" on-click="_dayClicked">
+                                                [[date.day]]
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                </template>
+                </div>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        class DatePicker extends Polymer.Element {
+            static get is() { return 'date-picker'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                        observer: '_questionChanged',
+                    },
+                    selectedDate: {
+                        type: Date,
+                        notify: true,
+                    },
+                    date: {
+                        type: Date,
+                        notify: true,
+                        observer: '_dateChanged',
+                    },
+                    calendarArray: {
+                        type: Array,
+                        notify: true,
+                        value: [],
+                        observer: '_arrayCalChanged',
+                    },
+                    curCalIndex: {
+                        type: Number,
+                        notify: true,
+                        value: 1,
+                    },
+                    curMonth: {
+                        type: String,
+                        notify: true,
+                    },
+                    curPosition: {
+                        type: Number,
+                        notify: true,
+                    },
+                    minDate: {
+                        type: Date,
+                        notify: true,
+                    },
+                    maxDate: {
+                        type: Date,
+                        notify: true,
+                    },
+                    unavailabilities: {
+                        type: Array,
+                        notify: true,
+                    },
+                    popupMessageText: {
+                        type: String,
+                        notify: true,
+                        value: '',
+                    },
+                    popupGoToID: {
+                        type: Number,
+                        notify: true,
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+            }
+
+            _getIDForDay(date) {
+                let year = date.date.getFullYear();
+                let month = date.date.getMonth();
+                let monthDay = date.date.getDate();
+                let idOfDay = year + '' + month + '' + monthDay;
+                if (!date.curMonth) {
+                    idOfDay += 'notCurMonth';
+                }
+                return idOfDay;
+            }
+
+            _goto(e) {
+                this.dispatchEvent(new CustomEvent('goto', {detail: {'question_id': this.popupGoToID}, bubbles: true, composed: true}));
+            }
+
+            _questionChanged() {
+                    this._checkExtras(this.question.metadata);
+                this.initCalendar();
+            }
+
+            _checkExtras(metadata) {
+                this.minDate = undefined;
+                this.maxDate = undefined;
+                this.unavailabilities = undefined;
+                if(metadata == null) {
+                    return;
+                }
+        
+                if (metadata.min_date != null) {
+                    this.minDate = new Date(metadata.min_date);
+                }
+                if (metadata.max_date != null) {
+                    this.maxDate = new Date(metadata.max_date);
+                }
+                if (metadata.unavailabilities != null) {
+                    this.unavailabilities = metadata.unavailabilities;
+                }
+            }
+
+            _arrayCalChanged() {
+                for (var i = 0; i < this.calendarArray.length; i++) {
+                    for (var j = 0; j < this.calendarArray[i].length; j++) {
+                        for (var k = 0; k < this.calendarArray[i][j].length; k++) {
+                            if (this.calendarArray[i][j][k].curMonth) {
+                                let date = new Date(this.calendarArray[i][j][k].date);
+                            }
+                        }
+                    }
+                }
+            }
+
+            initCalendar() {
+                this._resetSelected();
+                this.date = new Date();
+                let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                this.curPosition = 0;
+                this.curMonth = this._getMonth(this.date);
+                let prevDateTemp = new Date(this.date);
+                let prevMonth = this._addMonth(prevDateTemp, -1);
+                let nextDateTemp = new Date(this.date);
+                let nextMonth = this._addMonth(nextDateTemp, 1);
+                this.calendarArray = [];
+                this.calendarArray.push(this._getFillForMonth(prevMonth.getMonth(), prevMonth.getFullYear()));
+                this.calendarArray.push(this._getFillForMonth(this.date.getMonth(), this.date.getFullYear()));
+                this.calendarArray.push(this._getFillForMonth(nextMonth.getMonth(), nextMonth.getFullYear()));
+            }
+
+            _nextMonthClicked() {
+                this._hidePopup();
+                this._animateRight();
+                this.curCalIndex++;
+                if (this.curCalIndex === this.calendarArray.length - 1) {
+                    let dateTemp = new Date(this.date);
+
+                    let nextNextMonth = this._addMonth(dateTemp, 2);
+                    let tempArray = this.calendarArray;
+                    tempArray.push(this._getFillForMonth(nextNextMonth.getMonth(), nextNextMonth.getFullYear()));
+                    this.calendarArray = [];
+                    this.calendarArray = tempArray;
+                }
+                this.date = this._addMonth(this.date, 1);
+            }
+
+            _prevMonthClicked() {
+                this._hidePopup();
+                let dateTemp = new Date(this.date);
+                this.curCalIndex--;
+
+                if (this.curCalIndex === 0) {
+                    this._bufferPreviousMonth(dateTemp);
+                }
+                this.date = this._addMonth(this.date, -1);
+
+                this._animateLeft(dateTemp);
+            }
+
+            _bufferPreviousMonth(dateTemp) {
+                let prevPrevMonth = this._addMonth(dateTemp, -2);
+                let tempArray = this.calendarArray;
+                this.curCalIndex++;
+                tempArray.unshift(this._getFillForMonth(prevPrevMonth.getMonth(), prevPrevMonth.getFullYear()));
+                this.calendarArray = [];
+                this.calendarArray = tempArray;
+                let w = this.curPosition - Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+
+                this.$.calendarDisplay.animate(
+                    [
+                        {transform: 'translate3d(' + this.curPosition + 'px, 0px, 0)'},
+                        {transform: 'translate3d(' + w + 'px, 0px, 0)'},
+                    ],
+                    {fill: 'forwards', easing: 'cubic-bezier(0.465, 0.825, 0.565, 1.000)', duration: 0}
+                );
+                this.curPosition = w;
+            }
+
+            _animateLeft() {
+                let w = this.curPosition + Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+
+                this.animation = this.$.calendarDisplay.animate(
+                    [
+                        {transform: 'translate3d(' + this.curPosition + 'px, 0px, 0)'},
+                        {transform: 'translate3d(' + w + 'px, 0px, 0)'},
+                    ],
+                    {fill: 'forwards', easing: 'cubic-bezier(0.465, 0.825, 0.565, 1.000)', duration: 400}
+                );
+                this.curPosition = w;
+            }
+
+            _animateRight() {
+                let w = this.curPosition - Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+
+                this.animation = this.$.calendarDisplay.animate(
+                    [
+                        {transform: 'translate3d(' + this.curPosition + 'px, 0px, 0)'},
+                        {transform: 'translate3d(' + w + 'px, 0px, 0)'},
+                    ],
+                    {fill: 'forwards', easing: 'cubic-bezier(0.465, 0.825, 0.565, 1.000)', duration: 400}
+                );
+                this.curPosition = w;
+            }
+
+            _hidePopup() {
+                this.$.popupMessage.style.display = 'none';
+            }
+
+            _dayClicked(e) {
+                let clickedDate = e.model.__data.date;
+                this._hidePopup();
+                let clickedElement = this.shadowRoot.querySelector('[id="' + e.model.__data.date.id + '"]');
+                if (!clickedDate.click.valid) {
+                    this.popupMessageText = clickedDate.click.text;
+                    this.popupGoToID = clickedDate.click.goto;
+                    if (this.popupMessageText !== '') {
+                        this.$.popupMessage.style.display = 'block';
+                    }
+                    setTimeout(() => {
+                        // Some nice calculations to determine position of popup window :)
+                        var rect = clickedElement.getBoundingClientRect();
+                        let centerWidth = (clickedElement.offsetWidth - this.$.pointer.offsetWidth) / 2;
+                        let pointerMargin = (rect.left - ((window.innerWidth - this.$.popupMessage.offsetWidth) / 2) + centerWidth);
+                        pointerMargin = Math.max(0, pointerMargin);
+                        pointerMargin = Math.min(this.$.popupMessage.offsetWidth - this.$.pointer.offsetWidth, pointerMargin);
+                        this.$.pointer.style.marginLeft = pointerMargin + 'px';
+                        this.$.popupMessage.style.top = (rect.top - this.$.popupMessage.offsetHeight) + 'px';
+                    }, 10);
+
+                    return;
+                }
+                if (clickedDate.curMonth) {
+                    this._resetSelected();
+                    this.selectedDate = new Date(clickedDate.date);
+                    clickedElement.classList.add('selected');
+                }
+            }
+
+            _resetSelected() {
+                let days = this.shadowRoot.querySelectorAll('.day');
+                for (let i = 0; i < days.length; i++) {
+                    days[i].classList.remove('selected');
+                }
+            }
+
+            _dateChanged() {
+                this.curMonth = this._getMonth(this.date);
+            }
+
+            _getClasses(date) {
+                let result = 'dayWrapper layout vertical center-justified';
+                if (date.curMonth) {
+                    result += ' active';
+                } else {
+                    result += ' inActive';
+                }
+                return result;
+            }
+
+            _getClassesDay(date) {
+                let result = 'day layout vertical center-justified';
+                if (this.selectedDate != null) {
+                    if (date.date.getTime() === this.selectedDate.getTime()) {
+                        result += ' selected';
+                    }
+                }
+                if (!date.click.valid) {
+                    result += ' notClickable';
+                }
+                return result;
+            }
+
+            _getMonth(date) {
+                let month = new Array();
+                month[0] = 'January';
+                month[1] = 'February';
+                month[2] = 'March';
+                month[3] = 'April';
+                month[4] = 'May';
+                month[5] = 'June';
+                month[6] = 'July';
+                month[7] = 'August';
+                month[8] = 'September';
+                month[9] = 'October';
+                month[10] = 'November';
+                month[11] = 'December';
+                return month[date.getMonth()];
+            }
+
+            _getFillForMonth(month, year) {
+                let dateString = year + '-' + ((month + 1) < 10 ? '0' : '') + (month + 1) + '-01'
+                let firstOfMonth = new Date(dateString);
+                let startDate = this._addDay(firstOfMonth, firstOfMonth.getDay() * -1);
+                let calendarFill = new Array(5);
+                for (let i = 0; i < 5; i++) {
+                    calendarFill[i] = new Array(7);
+                    for (let j = 0; j < 7; j++) {
+                        calendarFill[i][j] = {
+                            'day': startDate.getDate(),
+                            'curMonth': month === startDate.getMonth(),
+                            'past': startDate < new Date(),
+                            'date': new Date(startDate),
+                            'click': this._checkIfClickable(startDate, month === startDate.getMonth()),
+                        };
+                        calendarFill[i][j].id = this._getIDForDay(calendarFill[i][j]);
+                        startDate = this._addDay(startDate, 1);
+                    }
+                }
+                return calendarFill;
+            }
+
+            _checkIfClickable(date, curMonth) {
+                let valid = true;
+                let text = '';
+                let questionToGoTo = '';
+                if (!curMonth) {
+                    return {
+                        'valid': valid,
+                        'text': text,
+                        'goto': questionToGoTo,
+                    };
+                }
+                if (this.minDate != null) {
+                    valid = valid && date >= new Date(this.minDate.getFullYear() + '-' + (this.minDate.getMonth() + 1) + '-' + this.minDate.getDate());
+                }
+
+                if (this.maxDate != null) {
+                    valid = valid && date <= new Date(this.maxDate.getFullYear() + '-' + (this.maxDate.getMonth() + 1) + '-' + this.maxDate.getDate());
+                }
+                if (this.unavailabilities != null) {
+                    for (let i = 0; i < this.unavailabilities.length; i++) {
+                        let number = Math.floor(Math.random() * 100) + 1;
+                        valid = valid && number > 10;
+                        if (!valid) {
+                            text = this.unavailabilities[i].text;
+                            questionToGoTo = this.unavailabilities[i].goto;
+                            break;
+                        }
+                    }
+                }
+
+                return {
+                    'valid': valid,
+                    'text': text,
+                    'goto': questionToGoTo,
+                };
+            }
+
+            _addMonth(date, numberOfMonths) {
+                return new Date(date.setMonth(date.getMonth() + numberOfMonths));
+            }
+
+            _addDay(date, numberOfDays) {
+                return new Date(date.setDate(date.getDate() + numberOfDays));
+            }
+
+
+        }
+
+        window.customElements.define(DatePicker.is, DatePicker);
+    </script>
+</dom-module>

@@ -1,0 +1,28 @@
+<div class="loginWrapper">
+  <div class="loginHeader">
+    <div class="loginTitle">Inloggen</div>
+    <img src="/assets/media/Inloggen.svg" class="loginImage"/>
+  </div>
+  <div class="loginContent">
+    <img src="/assets/itsme-login-button.svg" class="loginSelectButton noselect" on-click="_signInWithItsMe"/>
+
+    <span class="loginDivider"><u>of</u></span>
+
+    <paper-input value="{{username}}" label="Email" auto-validate type="email"
+                   on-input="_onChangeHandler"></paper-input>
+    <paper-input value="{{password}}" label="Wachtwoord" type="password"
+                   on-input="_onChangeHandler"></paper-input>
+    <!-- <div class="loginForgot">Wachtwoord vergeten?</div> -->
+  </div>
+  <dom-if if="[[_showLoginWarning(jwtError)]]">
+    <template>
+      <div class="Error">Verkeerde combinatie van gebruikersnaam en wachtwoord</div>
+    </template>
+  </dom-if>
+  <div class="loginBottomActions">
+    <div class="loginButtonContainer layout horizontal center-justified">
+      <div class$="loginButton {{_getClass(validated)}}" on-click="_signInHandler">Login</div>
+    </div>
+    <div class="loginCreate"><!-- DigiD aanvragen? --></div>
+  </div>
+</div>

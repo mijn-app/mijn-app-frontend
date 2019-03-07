@@ -1,0 +1,73 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="elements/category/category-basic-data.html">
+<link rel="import" href="elements/category/category-contracts.html">
+<link rel="import" href="elements/category/category-cards.html">
+<link rel="import" href="elements/category/category-manage.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="elements/general/back-button.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="app-categories">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                padding: 37px 16px 80px 16px;
+            }
+
+            .title {
+                margin-bottom: 46px;
+            }
+        </style>
+
+
+        <div class="layout vertical">
+            <back-button></back-button>
+            <iron-pages attr-for-selected="id" selected="[[currentCategory]]">
+                <category-basic-data id="1"></category-basic-data>
+                <category-contracts id="3"></category-contracts>
+                <category-cards id="4"></category-cards>
+                <category-manage id="5"></category-manage>
+            </iron-pages>
+        </div>
+
+    </template>
+
+    <script>
+        class AppCategories extends Polymer.Element {
+            static get is() { return 'app-categories'; }
+
+            static get properties() {
+                return {
+                    currentCategory: {
+                        type: Number,
+                        notify: true,
+                        observer: '_changed',
+                    },
+                };
+            }
+
+            _changed() {
+                window.scrollTo(0, 0);
+            }
+
+        }
+
+        window.customElements.define(AppCategories.is, AppCategories);
+    </script>
+</dom-module>

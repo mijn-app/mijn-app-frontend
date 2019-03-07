@@ -1,0 +1,138 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="category-cards">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                padding-top: 7px;
+                height: 100%;
+            }
+
+            .card {
+                margin-top: 14px;
+                border-radius: 5px;
+                padding-top: 12px;
+                padding-left: 18px;
+                padding-right: 18px;
+                padding-bottom: 14px;
+                height: 163px;
+            }
+
+            .cardTitle {
+                font-family: var(--main-font);
+                font-size: 30px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.5px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            .logo {
+                width: 40px;
+                min-width: 40px;
+                height: 40px;
+                background-color: yellow;
+            }
+
+            .line {
+                height: 1px;
+                opacity: 0.4;
+                border-radius: 5px;
+                background-color: var(--suggestion-line-color);
+                margin-top: 20px;
+                margin-bottom: 13px;
+            }
+
+            .checkAll {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.4px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            .arrow {
+                margin-left: 18px;
+            }
+        </style>
+        <div class="mainTitle">
+            Passen
+        </div>
+        <template is="dom-repeat" items="[[cards]]" as="card">
+            <div class="card layout vertical" style="background-color:[[card.background_color]]">
+                <div class="layout horizontal">
+                    <div class="cardTitle">[[card.title]]</div>
+                    <div class="flex"></div>
+                    <div class="logo"></div>
+                </div>
+                <div class="flex"></div>
+                <div class="line">
+
+                </div>
+                <div on-click="_cardClicked" class="layout horizontal center-justified">
+                    <span class="checkAll">Bekijk alle gegevens</span>
+                    <img class="arrow" src="images/icons/arrow-right-white.svg"></img>
+                </div>
+            </div>
+        </template>
+    </template>
+
+    <script>
+        class CategoryCards extends Polymer.Element {
+            static get is() { return 'category-cards'; }
+
+            static get properties() {
+                return {
+                    cards: {
+                        type: Array,
+                        notify: true,
+                        value: [{
+                            'title': 'DIT IS PAS EINDHOVEN',
+                            'icon': 'someiconurl',
+                            'background_color': '#e41613',
+                            'id': 0,
+        
+                        },
+                        {
+                            'title': 'Bonuskaart',
+                            'icon': 'someiconurl',
+                            'background_color': '#009fe5',
+                            'id': 1,
+                        },
+                        ],
+                    },
+                };
+            }
+
+            _cardClicked(e) {
+                window.location.href = '/#/card-detail/' + e.model.__data.card.id;
+            }
+
+
+        }
+
+        window.customElements.define(CategoryCards.is, CategoryCards);
+    </script>
+</dom-module>

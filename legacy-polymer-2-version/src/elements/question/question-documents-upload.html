@@ -1,0 +1,101 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<link rel="import" href="general/question-upload.html">
+<link rel="import" href="general/question-choice-loop.html">
+
+
+<dom-module id="question-documents-upload">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100vh;
+            }
+        </style>
+        <iron-pages selected="[[currentPage]]">
+            <question-upload on-document-changed="_documentAdded" question="[[question]]"></question-upload>
+
+            <!-- <question-photo on-document-changed="_documentAdded" question="[[question]]"></question-photo> -->
+            <question-choice-loop on-another="_another" show-images="[[answer]]" question="[[question]]"></question-choice-loop>
+        </iron-pages>
+    </template>
+
+    <script>
+        class QuestionDocumentsUpload extends Polymer.Element {
+            static get is() { return 'question-documents-upload'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: Object,
+                        notify: true,
+                        reflectToAttribute: true,
+                        observer: '_answerChanged',
+                        value: [],
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        notify: true,
+                        value: false,
+                    },
+                    currentPage: {
+                        type: Number,
+                        notify: true,
+                        value: 0,
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+            }
+
+            _another() {
+                this.currentPage = 0;
+            }
+
+            _documentAdded(e) {
+                this.currentPage = 1;
+                if (this.question.another != null) {
+                    let temp = this.answer;
+                    temp.push(e.detail.answer);
+                    this.answer = [];
+                    this.answer = temp;
+                } else {
+                    this.answer = e.detail.answer;
+                }
+            }
+
+            _answerChanged() {
+                this.answerValid = this.answer.length > 0;
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+            }
+
+        }
+
+        window.customElements.define(QuestionDocumentsUpload.is, QuestionDocumentsUpload);
+    </script>
+</dom-module>

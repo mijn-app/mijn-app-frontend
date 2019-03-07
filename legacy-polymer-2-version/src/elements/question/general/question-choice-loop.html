@@ -1,0 +1,124 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../shared-styles.html">
+
+<dom-module id="question-choice-loop">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+            }
+
+            .square {
+                max-width: 125px;
+                max-height: 186px;
+                width: 125px;
+                height: 186px;
+                border-radius: 3px;
+                background-color: var(--background-white);
+                margin-right: 18px;
+            }
+
+            .loopText {
+                margin-top: 9px;
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--dark-blue-grey);
+            }
+
+            .outerWrapper {
+                margin-top: 40px;
+                height: 186px;
+                position: relative;
+                width: calc(100vw -32px);
+                overflow-x: auto;
+
+            }
+
+            .photoWrapper {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        </style>
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div id="sub" class="questionSubTitle">
+            [[question.subtitle]]
+        </div>
+        <div class="outerWrapper">
+            <div class="photoWrapper layout horizontal">
+                <template is="dom-repeat" items="[[showImages]]">
+                    <img class="square" src="[[item]]">
+                </template>
+                <div on-click="_anotherClicked" class="square layout vertical center-justified">
+                    <div class="layout horizontal center-justified">
+                        <img src="[[_getImageUrl(question.another.icon)]]">
+                    </div>
+                    <div class="loopText layout horizontal center-justified">
+                        [[question.another.text]]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        class QuestionChoiceLoop extends Polymer.Element {
+            static get is() { return 'question-choice-loop'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    showImages: {
+                        type: Object,
+                        reflectToAttribute: true,
+                        notify: true,
+                    },
+                };
+            }
+
+            _getImageUrl(image) {
+                return 'images/dynamic-icons/' + image;
+            }
+
+            _anotherClicked(e) {
+                this.dispatchEvent(new CustomEvent('another', {bubbles: true, composed: true}));
+            }
+
+
+        }
+
+        window.customElements.define(QuestionChoiceLoop.is, QuestionChoiceLoop);
+    </script>
+</dom-module>

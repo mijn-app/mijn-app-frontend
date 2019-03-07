@@ -1,0 +1,333 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../../bower_components/google-apis/google-maps-api.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-location">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #sub {
+                margin-top: 7px;
+                margin-bottom: 20px;
+            }
+
+            img {
+                max-width: calc(100vw - 32px);
+            }
+
+            .location {
+                background-color: var(--background-white);
+                border-radius: 3px;
+            }
+
+            .locationOption {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+                height: 56px;
+                padding-right: 31px;
+                padding-left: 22px;
+            }
+
+            #ownLocation {
+                margin-top: 22px;
+            }
+
+            :host([map-open]) google-map {
+                display: block;
+            }
+
+            google-map {
+                z-index: 999;
+                position: absolute;
+                display: none;
+                top: 0;
+                left: 0;
+                height: calc(100vh + 20px);
+                width: 100vw;
+            }
+
+            :host([map-open]) #mapNav {
+                display: flex;
+            }
+
+
+            #mapNav {
+                z-index: 9999;
+                position: absolute;
+                display: none;
+                bottom: 33px;
+                height: 56px;
+                width: calc(100vw - 32px);
+                left: 0;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            :host([next-disabled]) #next {
+                opacity: 0.5;
+            }
+
+            .navButton {
+                width: 98px;
+                border-radius: 3px;
+                background-color: white;
+                height: 56px;
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--dark-blue-grey);
+            }
+
+            .navButtonHighContrast {
+                background-color: var(--grapefruit-color);
+                color: white;
+                box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.4);
+            }
+        </style>
+        <google-map map="{{map}}" click-events on-google-map-click="_mapClicked" zoom="17" id="map" latitude="[[mapLocation.lat]]"
+            longitude="[[mapLocation.lng]]" disable-default-ui fit-to-markers api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
+            <template is="dom-repeat" items="[[defaultLocations]]" as="location">
+                <google-map-marker id="[[_getIDOfMarker(location)]]" icon="[[_getIcon(location)]]" click-events latitude="[[location.lat]]"
+                    longitude="[[location.lng]]" on-google-map-marker-click="_markerClicked"></google-map-marker>
+            </template>
+        </google-map>
+        <div id="mapNav" class="layout horizontal">
+            <div id="prev" on-click="_prev" class="navButton layout vertical center-justified navButtonHighContrast">Vorige</div>
+            <div class="flex"></div>
+            <div id="next" on-click="_next" class="navButton layout vertical center-justified navButtonHighContrast">Volgende</div>
+        </div>
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div id="sub" class="questionSubTitle">
+            [[question.subtitle]]
+        </div>
+        <div on-click="_openMapDefault" class="layout vertical location">
+            <div class="layout horizontal locationOption">
+                <div class="layout vertical center-justified">
+                    Kies een standaard locatie
+                </div>
+                <div class="flex"></div>
+                <img src="images/icons/nav-arrow-right.svg">
+            </div>
+            <img src="images/location.png">
+        </div>
+
+        <div on-click="_openMap" id="ownLocation" class="layout horizontal location locationOption">
+            <div class="layout vertical center-justified">
+                Kies een standaard locatie
+            </div>
+            <div class="flex"></div>
+            <img src="images/icons/nav-arrow-right.svg">
+        </div>
+
+
+    </template>
+
+    <script>
+        class QuestionLocation extends Polymer.Element {
+            static get is() { return 'question-location'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: Object,
+                        notify: true,
+                        observer: '_answerChanged',
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        notify: true,
+                        value: true,
+                    },
+                    mapOpen: {
+                        type: Boolean,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: false,
+                    },
+                    map: {
+                        type: Object,
+                        notify: true,
+                    },
+                    mapLocation: {
+                        type: Object,
+                        notify: true,
+                        value: {
+                            'lat': 51.435060,
+                            'lng': 5.480756,
+                        },
+                    },
+                    standardLocationsInput: {
+                        type: Array,
+                        notify: true,
+                        value: [
+                            {
+                                'lat': 51.435060,
+                                'lng': 5.480756,
+                            },
+                            {
+                                'lat': 51.435797,
+                                'lng': 5.481088,
+                            },
+                            {
+                                'lat': 51.434562,
+                                'lng': 5.481975,
+                            },
+                        ],
+                    },
+                    defaultLocations: {
+                        type: Array,
+                        notify: true,
+                        value: [],
+                    },
+                    curClickedMarkers: {
+                        type: Array,
+                        notify: true,
+                        value: [],
+                    },
+                    nextDisabled: {
+                        type: Boolean,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: true,
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+                this._init();
+            }
+
+            _init() {
+                this._removeAllMarkers();
+                this.nextDisabled = true;
+                for (let i = 0; i < this.standardLocationsInput.length; i++) {
+                    this.standardLocationsInput[i].id = i;
+                }
+                this.defaultLocations = this.standardLocationsInput;
+            }
+
+            _getIDOfMarker(location) {
+                return location.id;
+            }
+
+            _prev() {
+                this.mapOpen = false;
+                this._init();
+            }
+
+            _next() {
+                if (this.nextDisabled) {
+                    return;
+                }
+                this.mapOpen = false;
+                this.dispatchEvent(new CustomEvent('next', {bubbles: true, composed: true}));
+            }
+
+            _getIcon() {
+                return {
+                    url: '../../../images/icons/marker.svg',
+                };
+            }
+
+            _mapClicked(e) {
+                if (this.defaultLocations.length > 0) {
+                    return;
+                }
+                let location = {lat: e.detail.latLng.lat(), lng: e.detail.latLng.lng()};
+                this.answer = location;
+                this._removeAllMarkers();
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: this.map,
+                    icon: {
+                        url: '../../../images/icons/marker-active.svg',
+                    },
+                });
+                this.curClickedMarkers.push(marker);
+            }
+
+            _removeAllMarkers() {
+                for (var i = 0; i < this.curClickedMarkers.length; i++) {
+                    this.curClickedMarkers[i].setMap(null);
+                }
+                this.curClickedMarkers = [];
+            }
+
+            _markerClicked(e) {
+                let markers = this.shadowRoot.querySelectorAll('google-map-marker');
+                this.answer = e.model.__data.location;
+                for (let i = 0; i < markers.length; i++) {
+                    markers[i].icon = {
+                        url: '../../../images/icons/marker.svg',
+                    };
+                }
+                let clickedElement = this.shadowRoot.querySelector('[id="' + e.model.__data.location.id + '"]');
+                clickedElement.icon = {
+                    url: '../../../images/icons/marker-active.svg',
+                };
+            }
+
+            _openMapDefault() {
+                this.defaultLocations = this.standardLocationsInput;
+                this.mapOpen = true;
+            }
+
+            _openMap() {
+                this.defaultLocations = [];
+                this.mapOpen = true;
+            }
+
+            _answerChanged() {
+                this.nextDisabled = this.answer == null;
+                this.question.data_properties.type = 'location';
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+            }
+
+        }
+
+        window.customElements.define(QuestionLocation.is, QuestionLocation);
+    </script>
+</dom-module>

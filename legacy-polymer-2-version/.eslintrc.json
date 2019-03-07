@@ -1,0 +1,35 @@
+{
+  "extends": ["eslint:recommended", "google", "plugin:requirejs/recommended"],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "plugins": [
+    "html",
+    "requirejs"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "rules": {
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+    "new-cap": ["error", { "capIsNewExceptions": ["Polymer"] }],
+    "no-var": "off",
+    "require-jsdoc": "off",
+    "no-unused-vars": [1, {"vars": "all", "args": "after-used"}],
+    "no-undef": [1, { "typeof": true }],
+    "requirejs/no-invalid-define": 2,
+    "requirejs/no-multiple-define": 2,
+    "requirejs/no-named-define": 2,
+    "requirejs/no-commonjs-wrapper": 2,
+    "requirejs/no-object-define": 1,
+    "max-len": [2, 120, 4]
+  },
+  "settings": {
+    "html/html-extensions": [".html", ".we"]  // consider .html and .we files as HTML
+  },
+  "globals": {
+    "Polymer": true,
+    "requirejs": true
+  }
+}

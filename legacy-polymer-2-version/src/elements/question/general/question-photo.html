@@ -1,0 +1,212 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<script src="../../../../node_modules/image-capture/lib/imagecapture.min.js"></script>
+
+<link rel="import" href="../../../../bower_components/app-media/app-media-devices.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/app-media/app-media-stream.html">
+<link rel="import" href="../../../../bower_components/app-media/app-media-video.html">
+<link rel="import" href="../../../../bower_components/app-media/app-media-image-capture.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../shared-styles.html">
+
+<dom-module id="question-photo">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100vh;
+                margin-top: -97px;
+            }
+
+            .takePictureButtonWrapper {
+                z-index: 999999;
+                position: absolute;
+                bottom: 35px;
+                height: 73px;
+                width: 100vw;
+            }
+
+            .takePictureButton {
+                width: 63px;
+                height: 63px;
+                border-radius: 63px;
+                border: 5px solid white;
+            }
+
+            #video {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .innerCircle {
+                width: 53px;
+                height: 53px;
+                border-radius: 53px;
+                background-color: white;
+            }
+
+            .overlay {
+                z-index: 999;
+                opacity: 0.8;
+                background-color: rgba(0, 0, 0, 0.43);
+            }
+
+            .outerOverlay {
+                height: 133px;
+            }
+
+            #total {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                height: 100vh;
+            }
+
+            #middleWrapper {
+                height: calc(100vh - 266px);
+                z-index: 999;
+            }
+
+            .borderMiddle {
+                width: 70px;
+                z-index: 999;
+
+            }
+
+            .middlePiece {
+                width: calc(100vw - 140px);
+                z-index: 999;
+                border-radius: 3px;
+                border: 2px solid white;
+                border-style: dashed;
+
+            }
+        </style>
+        <app-media-devices id="devices" kind="videoinput" selected-device="{{videoDevice}}">
+        </app-media-devices>
+
+        <app-media-stream id="stream" video-constraints="[[constraints]]" video-device="[[videoDevice]]" stream="{{stream}}">
+        </app-media-stream>
+
+        <app-media-video id="video" source="[[stream]]" muted>
+        </app-media-video>
+
+        <app-media-image-capture id="imageCapture" stream="[[_getStream(stream)]]" focus-mode="single-shot" last-photo="{{photo}}">
+        </app-media-image-capture>
+        <div id="total" class="layout vertical">
+            <div class="overlay outerOverlay">
+
+            </div>
+            <div id="middleWrapper" class="layout horizontal">
+                <div class="borderMiddle overlay">
+
+                </div>
+                <div class="middlePiece">
+
+                </div>
+                <div class="borderMiddle overlay">
+
+                </div>
+            </div>
+
+            <div class="overlay outerOverlay">
+
+            </div>
+        </div>
+
+
+        <div class="takePictureButtonWrapper layout horizontal center-justified ">
+            <div on-click="_takePicture" class="takePictureButton layout vertical center-justified">
+                <div class="layout horizontal center-justified">
+                    <div class="innerCircle">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        class QuestionPhoto extends Polymer.Element {
+            static get is() { return 'question-photo'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    answer: {
+                        type: Object,
+                        notify: true,
+                    },
+                    constraints: {
+                        type: Object,
+                        value: '{"facingMode":"environment"}',
+                    },
+                    videoDevice: {
+                        type: Object,
+                        notify: true,
+                    },
+                    photo: {
+                        type: Object,
+                        observer: '_photoChanged',
+                    },
+
+                };
+            }
+
+            static get observers() {
+                return [
+                    '_videoDeviceChanged(videoDevice)',
+                ];
+            }
+
+            read() {
+                // TODO rework https://github.com/cordova-plugin-camera-preview/cordova-plugin-camera-preview
+                super.ready();
+            }
+
+            _videoDeviceChanged(device) {
+                this.$.stream.videoDevice = this.videoDevice;
+                this.$.stream.active = true;
+                this.$.video.play();
+                if (!this.changedCamera) {
+                    if (device.label.indexOf('back') < 0) {
+                        this.changedCamera = true;
+                        this.$.devices.selectNextDevice();
+                    }
+                }
+            }
+
+            _getStream(stream) {
+                if (stream) {
+                    return stream;
+                }
+            }
+
+            _takePicture() {
+                this.$.imageCapture.takePhoto();
+            }
+
+            _photoChanged() {
+                let urlCreator = window.URL || window.webkitURL;
+                this.answer = urlCreator.createObjectURL(this.photo);
+                this.dispatchEvent(new CustomEvent('document-changed', {detail: {'answer': this.answer}, bubbles: true, composed: true}));
+            }
+
+        }
+
+        window.customElements.define(QuestionPhoto.is, QuestionPhoto);
+    </script>
+</dom-module>

@@ -1,0 +1,71 @@
+:host {
+  float: left;
+}
+.AppWrapper {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+}
+.App {
+  width: 100vw;
+  min-height: calc(100vh - 57px);
+  margin-bottom: 57px;
+  height: auto;
+  float: left;
+}
+.TabSwitcher {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 57px;
+  width: 100%;
+  background-color: var(--palette-background-paper);
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.11);
+  display: flex;
+  justify-content: space-around;
+}
+.TabSwitcherTab {
+  height: 100%;
+  width: 20%;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+
+  --icon-color: teal;
+}
+.TabSwitcherTabIcon {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.TabSwitcherTabIcon ::slotted(svg) {
+  fill: var(--icon-color);
+  stroke: var(--icon-color);
+  width: 100%;
+  height: 100%;
+}
+.TabSwitcherTabText {
+  height: 27px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.TabSwitcherTabTextInner {
+  font-family: var(--typography-fontFamily);
+  font-size: 13px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: -0.4px;
+  text-align: center;
+  color: var(--palette-text-disabled);
+}

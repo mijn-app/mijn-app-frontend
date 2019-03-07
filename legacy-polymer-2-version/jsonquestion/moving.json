@@ -1,0 +1,120 @@
+{
+    "title": "verhuizing",
+    "overview": {
+        "send_to": [
+            {
+                "name": "Gem. Eindhoven",
+                "access_level": "Lezen en schrijven"
+            }
+        ],
+        "needed_documents": [
+            "Huur- of koopcontract"
+        ],
+        "steps": [
+            "Geef je nieuwe adres op.",
+            "Geef de datum op wanneer je gaat verhuizen.",
+            "Geef aan met wie je gaat verhuizen.",
+            "Upload je koopcontracxt of huurcontract."
+        ]
+    },
+    "questions": [
+        {
+            "id": "bbe90362-2e82-11e8-b467-0ed5f89f718b",
+            "type": "text",
+            "title": "Wat wordt je nieuwe adres?",
+            "subtitle": "bijv. 1234AB Eindhoven",
+            "data_properties": {
+                "title": "Nieuwe adres",
+                "bind": "address"
+            },
+            "metadata": {
+                "autocomplete": "address"
+            },
+            "next": "bbe906f0-2e82-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "bbe906f0-2e82-11e8-b467-0ed5f89f718b",
+            "type": "calendar",
+            "title": "Wanneer wil je verhuizen?",
+            "subtitle": "bijv. 12-12-2017",
+            "data_properties": {
+                "title": "Datum van verhuizing",
+                "bind": "move_date"
+            },
+            "metadata": {
+                "min_date": "new Date()",
+                "max_date": "new Date(new Date().setMonth(new Date().getMonth() + 3))"
+            },
+            "next": "bbe90d9e-2e82-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "bbe90d9e-2e82-11e8-b467-0ed5f89f718b",
+            "type": "checkbox_group",
+            "title": "Met wie ga je verhuizen?",
+            "subtitle": "Er wordt een bericht gestuurd naar de persoon die meeverhuist",
+            "data_properties": {
+                "title": "Personen die meeverhuizen",
+                "bind": "movers"
+            },
+            "options": [
+                {
+                    "text": "Evelien de Vries",
+                    "value": "Evelien de Vries"
+                },
+                {
+                    "text": "Thomas de Vries",
+                    "value": "Thomas de Vries"
+                }
+            ],
+            "next": "bbe91064-2e82-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "bbe91064-2e82-11e8-b467-0ed5f89f718b",
+            "type": "choice",
+            "title": "Fotografeer je huurcontract",
+            "subtitle": "Wij hebben jouw huurcontract nodig om je verhuizing te bevestigen",
+            "options": [
+                {
+                    "text": "Maak foto",
+                    "icon": "camera.svg",
+                    "goto": "bbe912b2-2e82-11e8-b467-0ed5f89f718b"
+                },
+                {
+                    "text": "Upload",
+                    "icon": "upload.svg",
+                    "goto": "bbe914c4-2e82-11e8-b467-0ed5f89f718b"
+                }
+            ]
+        },
+        {
+            "id": "bbe912b2-2e82-11e8-b467-0ed5f89f718b",
+            "type": "documents_photo",
+            "title": "Fotografeer je huurcontract",
+            "subtitle": "Wij hebben jouw huurcontract nodig om je verhuizing te bevestigen",
+            "data_properties": {
+                "title": "Documenten",
+                "bind": "rental_contract_photos",
+                "placeholder": "Huurcontract"
+            },
+            "another": {
+                "text": "Nog een foto maken",
+                "icon": "camera.svg"
+            }
+        },
+        {
+            "id": "bbe914c4-2e82-11e8-b467-0ed5f89f718b",
+            "type": "documents_upload",
+            "title": "Upload je huurcontract",
+            "subtitle": "Wij hebben jouw huurcontract nodig om je verhuizing te bevestigen",
+            "data_properties": {
+                "title": "Documenten",
+                "bind": "rental_contract_photos",
+                "placeholder": "Huurcontract"
+            },
+            "another": {
+                "text": "Nog een foto uploaden",
+                "icon": "upload.svg"
+            }
+        }
+    ]
+}

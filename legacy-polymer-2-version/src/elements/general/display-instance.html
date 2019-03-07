@@ -1,0 +1,147 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="display-instance">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+            }
+
+            :host([show-options]) #viewOptions {
+                display: block;
+            }
+
+            #viewOptions{
+                display: none;
+                width: 17px;
+                height: 17px;
+                padding: 0;
+                margin:
+            }
+
+            .accessText {
+                opacity: 0.3;
+                font-family: var(--main-font);
+                font-size: 13px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.77;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .smallTitle {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.4px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 36px;
+                background-color: var(--search-input-grey);
+            }
+
+            .textWrapper {
+                margin-left: 15px;
+            }
+            .paperMenuButton {
+                padding: 0;
+            }
+            .paperMenuList {
+                width: 180px;
+            }
+            .paperMenuItemCancel {
+                color: #d70000;
+            }
+
+            .shareSettings {
+                @apply --layout-vertical;
+                @apply --layout-center-justified;
+            }
+
+        </style>
+
+        <div class="layout horizontal">
+            <div class="layout vertical center-justified">
+                <div class="icon"></div>
+            </div>
+            <div class="layout vertical textWrapper">
+                <div class="smallTitle">[[instance.name]]</div>
+                <div class="accessText">[[instance.access_level]]</div>
+            </div>
+            <div class="flex">
+
+            </div>
+            <div class="shareSettings">
+                <paper-menu-button close-on-activate="true" horizontal-align="right" vertical-align="top" class="paperMenuButton">
+                    <paper-icon-button id="viewOptions" src="images/icons/settings.svg" slot="dropdown-trigger">
+                    </paper-icon-button>
+                    <paper-listbox slot="dropdown-content" class="paperMenuList" attr-for-selected="item-name" selected="{{instance.access_level}}">
+                        <paper-item item-name="Lezen en schrijven">
+                            Lezen en schrijven
+                        </paper-item>
+                        <paper-item item-name="Alleen lezen">
+                            Alleen lezen
+                        </paper-item>
+                        <paper-item item-name="Niet delen" class="paperMenuItemCancel">
+                            Niet delen
+                        </paper-item>
+                    </paper-listbox>
+                </paper-menu-button>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        class DisplayInstance extends Polymer.Element {
+            static get is() { return 'display-instance'; }
+
+            static get properties() {
+                return {
+                    instance: {
+                        type: Object,
+                        notify: true,
+                    },
+                    showOptions: {
+                        type: Boolean,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: false,
+                    },
+                };
+            }
+        }
+
+        window.customElements.define(DisplayInstance.is, DisplayInstance);
+    </script>
+</dom-module>

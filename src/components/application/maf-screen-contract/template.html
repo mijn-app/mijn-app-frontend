@@ -1,0 +1,68 @@
+<div class="Wrapper">
+  <maf-screen heading="[[contract.titel]]" on-back="[[_backToContracts]]">
+    <div class="SubHeading">[[contract.type]]</div>
+    <div class="Description">[[contract.omschrijving]]</div>
+    <dom-repeat items="[[_mapObjToArr(contract)]]">
+      <template>
+        <div class="ContractDataPoint">
+          <div class="ContractDataPointLabel">[[item.key]]</div>
+          <dom-if if="[[item.value]]">
+            <template>
+              <div class="ContractDataPointValue">[[item.value]]</div>
+            </template>
+          </dom-if>
+          <dom-if if="[[item.values]]">
+            <template>
+              <dom-repeat items="[[item.values]]" as="value">
+                <template>
+                  <dom-if if="[[_isSame(value.key, 'Logo')]]">
+                    <template>
+                      <div class="Logo" style="[[_getLogoStyle(value.value)]]"></div>
+                    </template>
+                  </dom-if>
+                  <dom-if if="[[_isNotSame(value.key, 'Logo')]]">
+                    <template>
+                      <div class="ContractDataPointSubValue">
+                        <div class="ContractDataPointSubValueKey">[[value.key]]</div>
+                        <dom-if if="[[value.value]]">
+                          <template>
+                            <div class="ContractDataPointSubValueValue">[[value.value]]</div>
+                          </template>
+                        </dom-if>
+                      </div>
+                    </template>
+                  </dom-if>
+                  <dom-if if="[[value.values]]">
+                    <template>
+                      <dom-repeat items="[[value.values]]" as="final">
+                        <template>
+                          <dom-if if="[[_isSame(final.key, 'Logo')]]">
+                            <template>
+                              <div class="Logo" style="[[_getLogoStyle(final.value)]]"></div>
+                            </template>
+                          </dom-if>
+                          <dom-if if="[[_isNotSame(final.key, 'Logo')]]">
+                            <template>
+                              <dom-if if="[[final.value]]">
+                                <template>
+                                  <div class="ContractDataPointSubSubValue">
+                                    <div class="ContractDataPointSubSubValueKey">[[final.key]]</div>
+                                    <div class="ContractDataPointSubSubValueValue">[[final.value]]</div>
+                                  </div>
+                                </template>
+                              </dom-if>
+                            </template>
+                          </dom-if>
+                        </template>
+                      </dom-repeat>
+                    </template>
+                  </dom-if>
+                </template>
+              </dom-repeat>
+            </template>
+          </dom-if>
+        </div>
+      </template>
+    </dom-repeat>
+  </maf-screen>
+</div>

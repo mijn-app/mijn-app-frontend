@@ -1,0 +1,127 @@
+:host {
+}
+.Wrapper {
+  width: 100%;
+}
+.SearchWrapper {
+  margin: 13px 0 19px 0;
+  float: left;
+  width: 100%;
+}
+.TilesWrapper {
+  margin-top: 13px;
+  float: left;
+  width: 100%;
+}
+.TilesTitle {
+  height: 29px;
+  font-family: var(--typography-fontFamily);
+  font-size: 24px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0;
+  text-align: left;
+  color: var(--palette-primary-main);
+  margin-bottom: 7px;
+}
+.Tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.Tile {
+  margin: 10px 0;
+  width: calc(50% - 9px);
+  cursor: pointer;
+}
+@media (min-width: 600px) {
+  .Tile {
+    width: calc(33% - 12px);
+  }
+}
+@media (min-width: 900px) {
+  .Tile {
+    width: calc(25% - 13px);
+  }
+}
+.TileMedia {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  position: relative;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.TileMediaInner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.TileMediaInner img {
+  width: 100%;
+  height: 100%;
+}
+.TileTitle {
+  height: 23px;
+  font-family: var(--typography-fontFamily);
+  font-size: 18px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.28;
+  letter-spacing: -0.3px;
+  text-align: left;
+  color: var(--palette-primary-main);
+  margin-top: 15px;
+}
+
+#ItsMeLoginToast {
+  visibility: hidden;
+  width: calc(100% - 64px);
+  background-color: #10CB2C;
+  color: #FFF;
+  text-align: center;
+  border-radius: 3px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  bottom: 70px;
+  box-shadow: 0 7px 14px 0 rgba(0, 0, 0, 0.12);
+}
+
+#ItsMeLogo {
+  position: fixed;
+  right: 20px;
+  top: 55px;
+  height: 30px;
+}
+
+#ItsMeLoginToast.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 4.5s;
+  animation: fadein 0.5s, fadeout 0.5s 4.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 70px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 70px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 70px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 70px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}

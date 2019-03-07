@@ -1,0 +1,46 @@
+:host {
+}
+.Wrapper {
+  width: 100%;
+}
+.SearchWrapper {
+  margin: 13px 0 19px 0;
+  float: left;
+  width: 100%;
+}
+.Head {
+  height: 29px;
+  font-family: var(--typography-fontFamily);
+  font-size: 24px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0px;
+  text-align: left;
+  color: #19224c;
+  margin: 25px 0 10px 0;
+}
+.Title {
+  font-family: var(--typography-fontFamily);
+  font-size: 18px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.28;
+  letter-spacing: -0.4px;
+  text-align: left;
+  color: #19224C;
+  padding: 22px 0;
+  border-bottom: 1px solid #EFF1F3;
+  position: relative;
+  cursor: pointer;
+}
+.Title::after {
+  content: '>';
+  transform: scale(1, 1.5);
+  color: var(--palette-secondary-main);
+  position: absolute;
+  top: 45%;
+  right: 26px;
+}

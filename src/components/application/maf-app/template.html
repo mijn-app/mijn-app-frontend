@@ -1,0 +1,63 @@
+<maki-theme-provider theme="[[theme]]">
+  <div class="AppWrapper">
+    <div class="App">
+      <iron-pages selected="[[page]]" attr-for-selected="page" fallback-selection="view404">
+        <maf-screen-avg-log page="avg-log"></maf-screen-avg-log>
+        <maf-screen-avg-logs page="avg-logs"></maf-screen-avg-logs>
+        <maf-screen-contract page="contract"></maf-screen-contract>
+        <maf-screen-contracts page="contracts"></maf-screen-contracts>
+        <maf-screen-home page="home"></maf-screen-home>
+        <maf-screen-journey page="journey"></maf-screen-journey>
+        <maf-screen-journeys id="journeyScreen" page="journeys"></maf-screen-journeys>
+        <maf-screen-signin page="signin"></maf-screen-signin>
+        <maf-screen-person-data page="person-data"></maf-screen-person-data>
+      </iron-pages>
+    </div>
+    <dom-if if="[[_showTabs(page)]]">
+      <template>
+        <div class="TabSwitcher">
+          <div class="TabSwitcherTab" on-click="_goHome">
+            <div class="TabSwitcherTabIcon">
+              <maki-icon-home></maki-icon-home>
+            </div>
+            <div class="TabSwitcherTabText">
+              <div class="TabSwitcherTabTextInner">
+                Home
+              </div>
+            </div>
+          </div>
+          <div class="TabSwitcherTab" on-click="_goJourneys">
+            <div class="TabSwitcherTabIcon">
+              <maki-icon-search></maki-icon-search>
+            </div>
+            <div class="TabSwitcherTabText">
+              <div class="TabSwitcherTabTextInner">
+                Klantvragen
+              </div>
+            </div>
+          </div>
+          <div class="TabSwitcherTab" style="opacity: 0.25; cursor:not-allowed;" on-click="_nope">
+            <div class="TabSwitcherTabIcon">
+              <maki-icon-bell></maki-icon-bell>
+            </div>
+            <div class="TabSwitcherTabText">
+              <div class="TabSwitcherTabTextInner">
+                Notificaties
+              </div>
+            </div>
+          </div>
+          <div class="TabSwitcherTab" style="opacity: 0.25; cursor:not-allowed;" on-click="_nope">
+            <div class="TabSwitcherTabIcon">
+              <maki-icon-chat></maki-icon-chat>
+            </div>
+            <div class="TabSwitcherTabText">
+              <div class="TabSwitcherTabTextInner">
+                Chatten
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </dom-if>
+  </div>
+</maki-theme-provider>

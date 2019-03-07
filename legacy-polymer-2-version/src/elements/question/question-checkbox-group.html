@@ -1,0 +1,170 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-checkbox-group">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                width: calc(100vw - 32px);
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+            }
+
+            .checkboxOption {
+                background-color: var(--background-white);
+                height: 56px;
+                width: calc(100% - 40px);
+                margin-top: 10px;
+                border-radius: 3px;
+                padding-left: 23px;
+                padding-right: 17px;
+            }
+
+            .checkBoxText {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .boxWrapper {
+                margin-left: 9px;
+            }
+        </style>
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div class="questionSubTitle">
+            [[question.subtitle]]
+        </div>
+        <template is="dom-repeat" items="[[question.options]]" as="option">
+            <div class="checkboxOption layout horizontal">
+                <div class="checkBoxText layout vertical center-justified">
+                    [[option.text]]
+                </div>
+                <div class="flex"></div>
+                <div class="checkBoxText layout vertical center-justified">
+                    [[_getCostText(option.cost)]]
+                </div>
+                <div class="boxWrapper layout vertical center-justified">
+                    <div on-click="_checkboxClicked" class="checkboxSquare">
+                        <div class="check">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </template>
+
+    <script>
+        class QuestionCheckboxGroup extends Polymer.Element {
+            static get is() { return 'question-checkbox-group'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                        observer: '_questionChanged',
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: Array,
+                        notify: true,
+                        value: [],
+                        observer: '_answerChanged',
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        notify: true,
+                        value: true,
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+                setTimeout(() => {
+                    this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+                }, 50);
+            }
+
+            _questionChanged() {
+                this.answer = [];
+                let checkboxes = this.shadowRoot.querySelectorAll('.checkboxSquare');
+                for (let i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].classList.remove('selected');
+                }
+            }
+
+            _getCostText(cost) {
+                if (cost == null) {
+                    return;
+                }
+                return '€' + cost + ',-';
+            }
+
+            _checkboxClicked(e) {
+                for (let i = 0; i < e.path.length; i++) {
+                    if (e.path[i].classList == null) {
+                        continue;
+                    }
+                    if (e.path[i].classList.contains('checkboxSquare')) {
+                        let toggleClass = e.path[i].classList.toggle('selected');
+                        let temp = this.answer;
+                        if (toggleClass) {
+                            temp.push(e.model.__data.option);
+                        } else {
+                            temp = this.remove(temp, e.model.__data.option);
+                        }
+                        this.answer = [];
+                        this.answer = temp;
+                        break;
+                    }
+                }
+            }
+
+            remove(array, element) {
+                const index = array.indexOf(element);
+                if (index !== -1) {
+                    array.splice(index, 1);
+                }
+                return array;
+            }
+
+            _answerChanged() {
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+            }
+
+        }
+
+        window.customElements.define(QuestionCheckboxGroup.is, QuestionCheckboxGroup);
+    </script>
+</dom-module>

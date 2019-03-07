@@ -1,0 +1,123 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../general/date-picker.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-calendar">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+            }
+
+            :host([answer-valid]) #calSub {
+                display: none;
+            }
+
+            :host([answer-valid]) #calAns {
+                display: flex;
+            }
+
+            #calAns {
+                display: none;
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.4px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+            }
+
+            .show {
+                height: 25px;
+            }
+
+            #mainContent {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        </style>
+        <div id="mainContent" class="layout vertical">
+            <div id="titleWrapper" class="questionTitle">
+                [[question.title]]
+            </div>
+            <div id="calSub" class="questionSubTitle show">
+                [[question.subtitle]]
+            </div>
+            <div id="calAns" class="show">
+                [[_formatDate(answer)]]
+            </div>
+        </div>
+
+        <div>
+            <date-picker on-goto="_goto" question="[[question]]" id="datePicker" selected-date="{{answer}}"></date-picker>
+        </div>
+
+    </template>
+
+    <script>
+        class QuestionCalendar extends Polymer.Element {
+            static get is() { return 'question-calendar'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: Date,
+                        notify: true,
+                        observer: '_answerChanged',
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        reflectToAttribute: true,
+                        notify: true,
+                        value: false,
+                    },
+                };
+            }
+
+            _formatDate(date) {
+                return date.yyyymmdd();
+            }
+
+            _goto(e) {
+                this.dispatchEvent(new CustomEvent('goto', {detail: {'question_id': e.detail.question_id}, bubbles: true, composed: true}));
+            }
+
+            _answerChanged() {
+                this.answerValid = this.answer != null;
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+            }
+
+        }
+
+        window.customElements.define(QuestionCalendar.is, QuestionCalendar);
+    </script>
+</dom-module>

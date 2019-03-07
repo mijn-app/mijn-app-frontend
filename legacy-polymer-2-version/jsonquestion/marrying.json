@@ -1,0 +1,290 @@
+{
+    "title": "trouwen",
+    "overview": {
+        "sub_title": "Wat leuk dat je gaat trouwen! Om te trouwen hebben wij een aantal gegevens van je nodig.",
+        "send_to": [
+            {
+                "name": "Gem. Eindhoven",
+                "access_level": "Lezen en schrijven"
+            }
+        ],
+        "needed_documents": [
+            "Legitimatiebewijs van je partner"
+        ],
+        "steps": [
+            "Je geeft aan met wie je gaat trouwen.",
+            "Je kiest een datum en locatie.",
+            "Je geeft aan wie je getuigen voor het huwelijk zijn.",
+            "Je betaalt met IDEAL of Creditcard."
+        ],
+        "cost_description": "Trouwen op dinsdagochtend is gratis. De kosten kunnen varieren, afhankelijk van je wensen."
+    },
+    "cost": true,
+    "questions": [
+        {
+            "id": "8f6c188e-2e86-11e8-b467-0ed5f89f718b",
+            "type": "multi_text",
+            "title": "Gegevens huwelijkspartner",
+            "subtitle": "Kloppen deze gegevens?",
+            "data_properties": {
+                "title": "Gegevens huwelijkspartner",
+                "bind": "marriage_partner_data"
+            },
+            "list": [{
+                "text": "Naam",
+                "name": "name",
+                "value": "Evelien"
+            }, {
+                "text": "BSN",
+                "value": "13379002",
+                "name": "bsn"
+            }],
+            "next": "8f6c1ca8-abba-11e8-beeb-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c1ca8-abba-11e8-beeb-0ed5f89f718b",
+            "type": "choice",
+            "title": "Voeg ter controle een foto toe van de huwelijkspartner",
+            "subtitle": "Wilt u nu een foto maken of een foto uploaden?",
+            "options": [
+                {
+                    "text": "Ik wil een foto maken",
+                    "goto": "8f6c1ca8-2e8f-11e8-b467-0ed5f89f718b"
+                },
+                {
+                    "text": "Ik wil een foto uploaden",
+                    "goto": "8f6c1ca8-abba-11e8-b467-0ed5f89f718b"
+                }
+            ]
+        },
+        {
+            "id": "8f6c1ca8-abba-11e8-b467-0ed5f89f718b",
+            "type": "documents_upload",
+            "title": "Foto van je huwelijkspartner",
+            "subtitle": "",
+            "data_properties": {
+                "title": "Documenten",
+                "bind": "marrying_photos",
+                "placeholder": "Foto huwelijkspartner"
+            },
+            "another": {
+                "text": "Nog een document uploaden",
+                "icon": "upload.svg"
+            },
+            "next": "8f6c1ca8-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c1ca8-2e8f-11e8-b467-0ed5f89f718b",
+            "type": "documents_photo",
+            "title": "Foto van je huwelijkspartner",
+            "subtitle": "",
+            "data_properties": {
+                "title": "Documenten",
+                "bind": "marrying_photos",
+                "placeholder": "Foto huwelijkspartner"
+            },
+            "another": {
+                "text": "Nog een foto maken",
+                "icon": "camera.svg"
+            },
+            "next": "8f6c1ca8-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c1ca8-2e86-11e8-b467-0ed5f89f718b",
+            "type": "multiple_choice",
+            "title": "Hoe wil je trouwen?",
+            "subtitle": "Maak een keuze hoe je wilt trouwen.",
+            "data_properties": {
+                "title": "Hoe trouwen",
+                "bind": "how_to_marry"
+            },
+            "options": [
+                {
+                    "text": "Gratis trouwen",
+                    "cost": 0,
+                    "value": "Gratis trouwen"
+
+                },
+                {
+                    "text": "Zonder ceremonie",
+                    "cost": 75,
+                    "value": "Zonder ceremonie"
+
+                },
+                {
+                    "text": "Met ceremonie",
+                    "cost": 150,
+                    "value": "Met ceremonie"
+                }
+            ],
+            "next": "8f6c1f5a-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c1f5a-2e86-11e8-b467-0ed5f89f718b",
+            "type": "location",
+            "title": "Waar wil je trouwen?",
+            "subtitle": "Op deze locatie kunnen jullie een handtekening zetten.",
+            "data_properties": {
+                "title": "Trouw locatie",
+                "bind": "location"
+            },
+            "next": "8f6c2220-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c2220-2e86-11e8-b467-0ed5f89f718b",
+            "type": "multiple_choice",
+            "title": "Kies een trouwamtenaar",
+            "subtitle": "Je kunt kiezen wie jullie trouwt. Scroll door de lijst om iedereen te zien.",
+            "data_properties": {
+                "title": "Trouwambtenaar",
+                "bind": "wedding_official"
+            },
+            "options": [
+                {
+                    "text": "Geen voorkeur",
+                    "value": "Geen voorkeur"
+                },
+                {
+                    "text": "Kies Willem",
+                    "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "value": "Willem"
+                },
+                {
+                    "text": "Kies Judith",
+                    "video_url": "https://www.youtube.com/watch?v=hVtAw2gie5Y",
+                    "value": "Judith"
+                },
+                {
+                    "text": "Kies René",
+                    "video_url": "https://www.youtube.com/watch?v=qHfJG_eEWKE",
+                    "value": "René"
+                }
+            ],
+            "next": "8f6c243c-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c243c-2e86-11e8-b467-0ed5f89f718b",
+            "type": "calendar",
+            "title": "Wanneer wil je trouwen?",
+            "subtitle": "bijv. 12-12-2017.",
+            "data_properties": {
+                "title": "Datum van trouwen",
+                "bind": "marry_date"
+            },
+            "metadata": {
+                "unavailabilities": [
+                    {
+                        "url": "someapicalltofetchinfo",
+                        "text": "trouwambtenaar",
+                        "goto": "8f6c2220-2e86-11e8-b467-0ed5f89f718b"
+                    },
+                    {
+                        "url": "someapicalltofetchinfo",
+                        "text": "locatie",
+                        "goto": "8f6c1f5a-2e86-11e8-b467-0ed5f89f718b"
+                    }
+                ]
+            },
+            "next": "8f6c291e-2e86-11e8-b467-0ed5f89f718b"
+        },{
+            "id": "8f6c291e-2e86-11e8-b467-0ed5f89f718b",
+            "type": "multi_text",
+            "title": "Gegevens eerste getuige",
+            "subtitle": "Kloppen deze gegevens?",
+            "data_properties": {
+                "title": "Gegevens eerste getuige",
+                "bind": "first_witness_data"
+            },
+            "list": [{
+                "text": "Naam",
+                "value": "Evelien de Vries",
+                "name": "name"
+            }, {
+                "text": "BSN",
+                "value": "13379002",
+                "name": "bsn"
+            }],
+            "next": "8f6c2d9c-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c2d9c-2e86-11e8-b467-0ed5f89f718b",
+            "type": "multi_text",
+            "optional": {
+                "goto": "8f6c2fcc-2e86-11e8-b467-0ed5f89f718b"
+            },
+            "title": "Gegevens tweede getuige",
+            "subtitle": "Is er een tweede getuige?",
+            "data_properties": {
+                "title": "Gegevens tweede getuige",
+                "bind": "second_witness_data"
+            },
+            "list": [{
+                "text": "Naam",
+                "name": "name"
+            }, {
+                "text": "BSN",
+                "name": "bsn"
+            }],
+            "next": "8f6c2fcc-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c2fcc-2e86-11e8-b467-0ed5f89f718b",
+            "type": "declaration",
+            "title": "Ik verklaar dat ik nog met niemand anders getrouwd ben.",
+            "data_properties": {
+                "title": "Nog niet getrouwd",
+                "bind": "not_married_declaration"
+            },
+            "declaration_text": "Ja",
+            "next": "8f6c31ac-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c31ac-2e86-11e8-b467-0ed5f89f718b",
+            "type": "radiobutton_group",
+            "title": "Ik ben bloedverwant in de derde of vierde graads.",
+            "subtitle": "Bijvoorbeeld neef en nicht of tante en neef.",
+            "data_properties": {
+                "title": "Bloedverwant derde of vierde graads",
+                "bind": "blood_relation_family"
+            },
+            "options": [
+                {
+                    "text": "Ja",
+                    "value": "Ja"
+                },
+                {
+                    "text": "Nee",
+                    "value": "Nee"
+                }
+            ],
+            "next": "8f6c3378-2e86-11e8-b467-0ed5f89f718b"
+        },
+        {
+            "id": "8f6c3378-2e86-11e8-b467-0ed5f89f718b",
+            "type": "checkbox_group",
+            "title": "Welke dingen wil je nog meer op je trouwerij?",
+            "subtitle": "Selecteer wat je graag wilt hebben.",
+            "data_properties": {
+                "title": "Feest artikelen",
+                "bind": "party_attributes"
+            },
+            "options": [
+                {
+                    "text": "Champagne 🍾",
+                    "cost": 12,
+                    "value": "Champagne"
+                },
+                {
+                    "text": "Confetti 🎉",
+                    "cost": 8,
+                    "value": "Confetti"
+                },
+                {
+                    "text": "Geluidsinstallatie 🎵",
+                    "cost": 20,
+                    "value": "Geluidsinstallatie"
+                }
+            ]
+        }
+    ]
+}

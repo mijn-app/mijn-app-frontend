@@ -1,0 +1,86 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-done">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                font-family: var(--main-font);
+                overflow-y: auto;
+                padding-left: 16px;
+                padding-right: 16px;
+                padding-bottom: 25px;
+            }
+
+            #title {
+                font-size: 23px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--dark-blue-grey);
+            }
+
+            #subText {
+                margin-top: 40px;
+                font-size: 18px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.4px;
+                text-align: center;
+                color: var(--dark-blue-grey);
+            }
+
+            img{
+                margin-top: 50px;
+            }
+        </style>
+        <div id="title">
+            Succesvol aangevraagd
+        </div>
+        <div class="layout horizontal center-justified">
+            <img src="images/party.png">
+        </div>
+        <div id="subText">
+            Als de [[title]] is doorgevoerd laten we je dit direct weten!
+        </div>
+
+    </template>
+
+    <script>
+        class QuestionDone extends Polymer.Element {
+            static get is() { return 'question-done'; }
+
+            static get properties() {
+                return {
+                    title: {
+                        type: String,
+                        notify: true,
+                        value: '',
+                    },
+                };
+            }
+
+        }
+
+        window.customElements.define(QuestionDone.is, QuestionDone);
+    </script>
+</dom-module>

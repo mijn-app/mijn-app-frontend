@@ -1,0 +1,226 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-share">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                font-family: var(--main-font);
+                overflow-y: auto;
+                padding-left: 16px;
+                padding-right: 16px;
+                padding-bottom: 25px;
+            }
+
+            #title {
+                font-size: 34px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            #subText {
+                margin-top: 7px;
+                opacity: 0.7;
+                font-size: 18px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .subTitle {
+                font-size: 18px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .marginTitle {
+                margin-top: 25px;
+
+            }
+
+            .icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 36px;
+                background-color: #f7f7f7;
+            }
+
+            .specifications {
+                font-size: 13px;
+                opacity: 0.3;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.77;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .instanceTextWrapper {
+                margin-left: 16px;
+            }
+
+            .option {
+                margin-top: 16px;
+            }
+
+
+            .line {
+                margin-top: 15px;
+                border: solid 1px var(--notification-line-color);
+            }
+
+            .sendWrapper{
+                overflow-y: auto;
+            }
+        </style>
+        <div id="title">
+            Delen
+        </div>
+        <div id="subText">
+            Kies de instanties waar je de [[title]] aan door wilt geven
+        </div>
+        <div class="sendWrapper">
+
+            <div class="marginTitle subTitle">
+                Standaard doorgegeven aan
+            </div>
+            <div class="layout horizontal option">
+                <div class="layout vertical center-justified">
+                    <div class="icon">
+                    </div>
+                </div>
+                <div class="instanceTextWrapper" class="layout vertical">
+                    <div class="subTitle">Gem. Eindhoven</div>
+                    <div class="specifications">Lezen en schrijven</div>
+                </div>
+                <div class="flex"></div>
+                <div class="layout vertical center-justified">
+                    <div on-click="_checkboxClicked" class="checkboxRound selected">
+                        <div class="check">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="layout horizontal option">
+                <div class="layout vertical center-justified">
+                    <div class="icon">
+                    </div>
+                </div>
+                <div class="instanceTextWrapper" class="layout vertical">
+                    <div class="subTitle">Belastingdienst</div>
+                    <div class="specifications">Alleen lezen</div>
+                </div>
+                <div class="flex"></div>
+                <div class="layout vertical center-justified">
+                    <div on-click="_checkboxClicked" class="checkboxRound selected">
+                        <div class="check">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="marginTitle subTitle">
+                Optioneel
+            </div>
+
+            <div class="layout horizontal option">
+                <div class="layout vertical center-justified">
+                    <div class="icon">
+                    </div>
+                </div>
+                <div class="instanceTextWrapper" class="layout vertical">
+                    <div class="subTitle">Zorgverzekeraar x</div>
+                    <div class="specifications">Alleen lezen</div>
+                </div>
+                <div class="flex"></div>
+                <div class="layout vertical center-justified">
+                    <div on-click="_checkboxClicked" class="checkboxRound">
+                        <div class="check">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="layout horizontal option">
+                <div class="layout vertical center-justified">
+                    <div class="icon">
+                    </div>
+                </div>
+                <div class="instanceTextWrapper" class="layout vertical">
+                    <div class="subTitle">UMC Utrecht</div>
+                    <div class="specifications">Alleen lezen</div>
+                </div>
+                <div class="flex"></div>
+                <div class="layout vertical center-justified">
+                    <div on-click="_checkboxClicked" class="checkboxRound">
+                        <div class="check">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </template>
+
+    <script>
+        class QuestionShare extends Polymer.Element {
+            static get is() { return 'question-share'; }
+
+            static get properties() {
+                return {
+                    title: {
+                        type: String,
+                        notify: true,
+                        value: '',
+                    },
+                };
+            }
+
+            _checkboxClicked(e) {
+                for (let i = 0; i < e.path.length; i++) {
+                    if (e.path[i].classList == null) {
+                        continue;
+                    }
+                    if (e.path[i].classList.contains('checkboxRound')) {
+                        let toggleClass = e.path[i].classList.toggle('selected');
+                    }
+                }
+            }
+
+        }
+
+        window.customElements.define(QuestionShare.is, QuestionShare);
+    </script>
+</dom-module>

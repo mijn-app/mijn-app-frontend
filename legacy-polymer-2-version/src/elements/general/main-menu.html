@@ -1,0 +1,132 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="main-menu">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                z-index: 99999;
+                display: block;
+                width: calc(100vw - 50px);
+                padding: 0px 25px 0px 25px;
+                height: 57px;
+                box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.11);
+                background-color: var(--background-white);
+                position: fixed;
+                top: calc(100vh - 57px);
+                left: 0px;
+            }
+
+            .test {
+                padding-top: 10px;
+                padding-bottom: 6px;
+                padding-left: 3px;
+                padding-right: 3px;
+            }
+
+            img {
+                width: 20px;
+                height: 20px;
+            }
+
+            .menuText {
+                margin-top: 6px;
+            }
+        </style>
+        <div class="layout horizontal">
+            <div on-click="_goToHome" class="test layout vertical center-justified">
+                <div class="layout horizontal center-justified">
+                    <img src="[[_getImageUrl(page,'home')]]">
+                </div>
+                <div class="groteskMedium menuText">
+                    Home
+                </div>
+            </div>
+            <div class="flex"> </div>
+            <div on-click="_goToSearch" class="test layout vertical center-justified">
+                <div class="layout horizontal center-justified">
+                    <img src="[[_getImageUrl(page,'search')]]">
+                </div>
+                <div class="groteskMedium menuText">
+                    Zoeken
+                </div>
+            </div>
+            <div class="flex"> </div>
+            <div on-click="_goToNotifications" class="test layout vertical center-justified">
+                <div class="layout horizontal center-justified">
+                    <img src="[[_getImageUrl(page,'notifications')]]">
+                </div>
+                <div class="groteskMedium menuText">
+                    Notificaties
+                </div>
+            </div>
+            <div class="flex"> </div>
+            <div on-click="_goToChat" class="test layout vertical center-justified">
+                <div class="layout horizontal center-justified">
+                    <img src="[[_getImageUrl(page,'chat')]]">
+                </div>
+                <div class="groteskMedium menuText">
+                    Chatten
+                </div>
+            </div>
+
+        </div>
+    </template>
+
+    <script>
+        class MainMenu extends Polymer.Element {
+            static get is() { return 'main-menu'; }
+
+            static get properties() {
+                return {
+                    page: {
+                        type: String,
+                        reflectToAttribute: true,
+                    },
+                };
+            }
+
+            _getImageUrl(page, item) {
+                if (page == null) {
+                    return '../../images/menu-icons/' + item + '.svg';
+                }
+                if (page === ('app-' + item)) {
+                    return '../../images/menu-icons/' + item + '-active.svg';
+                } else {
+                    return '../../images/menu-icons/' + item + '.svg';
+                }
+            }
+
+            _goToHome() {
+                window.location.href = '/#/app-home';
+            }
+
+            _goToSearch() {
+                window.location.href = '/#/app-search';
+            }
+
+            _goToNotifications() {
+                window.location.href = '/#/app-notifications';
+            }
+
+            _goToChat() {
+                window.location.href = '/#/app-chat';
+            }
+        }
+
+        window.customElements.define(MainMenu.is, MainMenu);
+    </script>
+</dom-module>

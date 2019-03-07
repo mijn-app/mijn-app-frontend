@@ -1,0 +1,126 @@
+{
+	"title": "Ik wil een bezwaar indienen",
+	"overview": {
+		"sub_title": "Je kunt hier een bezwaar indienen tegen een parkeerbon",
+		"send_to": [
+			{
+				"name": "Gem. Eindhoven",
+				"access_level": "Lezen en schrijven"
+			}
+		],
+		"needed_documents": [
+			"Je kunt één of meerdere documenten toe voegen (parkeerticket, bewijsstuk, etc)>"
+		],
+		"steps": [
+			"Kies de beschikking waartegen je bezwaar wilt maken.",
+			"Geef aan waarom wil je bezwaar wilt maken?",
+			"Je voegt eventueel document of foto's toe."
+		]
+	},
+	"questions": [
+		{
+			"id": "d4449bd7-2f12-4b06-8284-6e3ab6c3484a",
+			"type": "checkbox_group",
+			"title": "Wil je bezwaar maken tegen een van onderstaande beschikkingen?",
+			"subtitle": "Indien onderstaand scherm leeg is, dan kun je op dit moment nergens bezwaar tegen maken.",
+			"data_properties": {
+				"title": "Klacht(en)",
+				"bind": "complaint_types"
+			},
+			"options": [
+				{
+					"text": "Nummer beschikking 1",
+					"value": "Nummer beschikking 1"
+				},
+				{
+					"text": "Nummer beschikking 2",
+					"value": "Nummer beschikking 2"
+				}
+			],
+			"next": "771f9b38-f847-4545-a5b9-2d3046da4018"
+		},
+		{
+			"id": "771f9b38-f847-4545-a5b9-2d3046da4018",
+			"type": "text",
+			"title": "Waarom wil je bezwaar maken?",
+			"subtitle": "Beschrijf waarom je bezwaar maakt.",
+			"data_properties": {
+				"title": "Beschrijfing",
+				"bind": "Beschrijfing"
+			},
+			"next": "f3a140ac-0244-4744-b5d2-2a36d3a53594"
+		},
+		{
+			"id": "f3a140ac-0244-4744-b5d2-2a36d3a53594",
+			"type": "choice",
+			"title": "Bewijsstukken",
+			"subtitle": "Voeg bewijsstukken ter ondersteuning van je bezwaar toe.",
+			"options": [
+				{
+					"text": "Ik wil een document uploaden",
+					"goto": "a4782a2a-998a-4648-99c5-8f3f6fa804c3"
+				},
+				{
+					"text": "Ik wil een foto maken",
+					"goto": "35039c60-d3fd-4903-a2ac-eb69858f337d"
+				},
+				{
+					"text": "Nee",
+					"goto": "bdf40318-7c87-4c37-9594-8760b6f24b8e"
+				}
+			]
+		},
+		{
+			"id": "a4782a2a-998a-4648-99c5-8f3f6fa804c3",
+			"type": "documents_upload",
+			"title": "Document aanleveren van jouw klacht",
+			"subtitle": "",
+			"data_properties": {
+				"title": "Documenten",
+				"bind": "complaint_documents",
+				"placeholder": "Jouw klacht"
+			},
+			"another": {
+				"text": "Nog een document uploaden",
+				"icon": "upload.svg"
+			},
+			"next": "f3a140ac-0244-4744-b5d2-2a36d3a53594"
+		},
+		{
+			"id": "35039c60-d3fd-4903-a2ac-eb69858f337d",
+			"type": "documents_photo",
+			"title": "Foto aanleveren van jouw klacht",
+			"subtitle": "",
+			"data_properties": {
+				"title": "Foto's",
+				"bind": "compaint_photos",
+				"placeholder": "Jouw klacht"
+			},
+			"another": {
+				"text": "Nog een foto maken",
+				"icon": "camera.svg"
+			},
+			"next": "f3a140ac-0244-4744-b5d2-2a36d3a53594"
+		},
+		{
+			"id": "bdf40318-7c87-4c37-9594-8760b6f24b8e",
+			"type": "radiobutton_group",
+			"title": "Contact",
+			"subtitle": "Vind je het prettig dat er contact met je wordt opgenomen over jouw klacht?",
+			"data_properties": {
+				"title": "Contact over jou idee",
+				"bind": "contact"
+			},
+			"options": [
+				{
+					"text": "Ja",
+					"value": "Ja"
+				},
+				{
+					"text": "Nee",
+					"value": "Nee"
+				}
+			]
+		}
+	]
+}

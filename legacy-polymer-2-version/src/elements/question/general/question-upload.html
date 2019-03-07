@@ -1,0 +1,99 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../shared-styles.html">
+
+<dom-module id="question-upload">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+            }
+
+            input[type="file"] {
+                display: none;
+            }
+
+            .fileUpload {
+                background-color: white;
+                padding-top: 30px;
+                padding-bottom: 30px;
+                padding-left: 40px;
+                padding-right: 40px;
+                border-radius: 3px;
+                margin-top: 9px;
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            #sub {
+                margin-bottom: 20px;
+            }
+        </style>
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div id="sub" class="questionSubTitle">
+            [[question.subtitle]]
+        </div>
+        <div class="layout horizontal center-justified">
+            <label class="fileUpload">
+                <input type="file" on-change="_inputChanged" /> Click to upload
+            </label>
+        </div>
+
+    </template>
+
+    <script>
+        class QuestionUpload extends Polymer.Element {
+            static get is() { return 'question-upload'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    answer: {
+                        type: Object,
+                        notify: true,
+                    },
+                };
+            }
+
+            _inputChanged(e) {
+                this.answer = URL.createObjectURL(e.target.files[0]);
+                this.dispatchEvent(new CustomEvent('document-changed', {detail: {'answer': this.answer}, bubbles: true, composed: true}));
+            }
+
+
+        }
+
+        window.customElements.define(QuestionUpload.is, QuestionUpload);
+    </script>
+</dom-module>

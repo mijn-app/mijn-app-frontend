@@ -1,0 +1,68 @@
+<div class="Wrapper">
+  <maf-screen heading="[[avgLog.procesOmschrijving]]" on-back="[[_backToAvgLogs]]">
+    <div class="SubHeading">[[_capitalize(avgLog.opgevraagdeElementen)]]</div>
+    <div class="Description">[[_capitalize(avgLog.omschrijving)]]</div>
+    <dom-repeat items="[[_mapObjToArr(avgLog)]]">
+      <template>
+        <div class="AvgLogDataPoint">
+          <div class="AvgLogDataPointLabel">[[item.key]]</div>
+          <dom-if if="[[item.value]]">
+            <template>
+              <div class="AvgLogDataPointValue">[[item.value]]</div>
+            </template>
+          </dom-if>
+          <dom-if if="[[item.values]]">
+            <template>
+              <dom-repeat items="[[item.values]]" as="value">
+                <template>
+                  <dom-if if="[[_isSame(value.key, 'Logo')]]">
+                    <template>
+                      <div class="Logo" style="[[_getLogoStyle(value.value)]]"></div>
+                    </template>
+                  </dom-if>
+                  <dom-if if="[[_isNotSame(value.key, 'Logo')]]">
+                    <template>
+                      <div class="AvgLogDataPointSubValue">
+                        <div class="AvgLogDataPointSubValueKey">[[value.key]]</div>
+                        <dom-if if="[[value.value]]">
+                          <template>
+                            <div class="AvgLogDataPointSubValueValue">[[value.value]]</div>
+                          </template>
+                        </dom-if>
+                      </div>
+                    </template>
+                  </dom-if>
+                  <dom-if if="[[value.values]]">
+                    <template>
+                      <dom-repeat items="[[value.values]]" as="final">
+                        <template>
+                          <dom-if if="[[_isSame(final.key, 'Logo')]]">
+                            <template>
+                              <div class="Logo" style="[[_getLogoStyle(final.value)]]"></div>
+                            </template>
+                          </dom-if>
+                          <dom-if if="[[_isNotSame(final.key, 'Logo')]]">
+                            <template>
+                              <dom-if if="[[final.value]]">
+                                <template>
+                                  <div class="AvgLogDataPointSubSubValue">
+                                    <div class="AvgLogDataPointSubSubValueKey">[[final.key]]</div>
+                                    <div class="AvgLogDataPointSubSubValueValue">[[final.value]]</div>
+                                  </div>
+                                </template>
+                              </dom-if>
+                            </template>
+                          </dom-if>
+                        </template>
+                      </dom-repeat>
+                    </template>
+                  </dom-if>
+                </template>
+              </dom-repeat>
+            </template>
+          </dom-if>
+        </div>
+      </template>
+    </dom-repeat>
+  </maf-screen>
+</div>

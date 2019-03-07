@@ -1,0 +1,369 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-chat">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: none;
+                width: 100vw;
+                height: 100%;
+                z-index: 9999;
+            }
+
+            :host([visible]) {
+                display: block;
+            }
+
+            paper-input {
+                --paper-input-container: {}
+                ;
+
+                --paper-input-container-label: {
+                    font-family: var(--main-font);
+                    font-size: 16px;
+                    font-weight: 500;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.44;
+                    letter-spacing: -0.2px;
+                    text-align: left;
+                    color: var(--greyish);
+                }
+                ;
+
+                --paper-input-container-input: {
+                    font-family: var(--main-font);
+                    font-size: 16px;
+                    font-weight: 500;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.44;
+                    letter-spacing: -0.2px;
+                    text-align: left;
+                    color: var(--greyish);
+                }
+                ;
+
+                --paper-input-container-underline: {
+                    display: none;
+                }
+                ;
+
+                --paper-input-container-underline-focus: {
+                    display: none;
+                }
+                ;
+            }
+
+            #overlay {
+                height: 31px;
+                background-color: black;
+                opacity: 0.5;
+            }
+
+            #header {
+                display: flex;
+                height: 178px;
+                background-color: red;
+
+            }
+
+            .headerText {
+                margin-top: 4px;
+                width: 100vw;
+                font-family: var(--main-font);
+                font-size: 16px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.2px;
+                text-align: center;
+                color: var(--text-white);
+            }
+
+            #wrapperWrapper {
+                height: calc(100% - 257px);
+                max-height: calc(100% - 257px);
+                overflow-y: auto;
+                background-color: var(--background-white);
+            }
+
+            #textDisplayArea {
+                background-color: var(--background-white);
+                padding-left: 13px;
+                padding-right: 13px;
+                padding-bottom: 20px;
+            }
+
+            #footer {
+                border-top: 1px solid var(--suggestion-line-color);
+                height: 47px;
+                background-color: var(--background-white);
+            }
+
+            #cameraImageWrapper {
+                height: 47px;
+                width: 70px;
+            }
+
+            #sendButton {
+                font-size: 16px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.44;
+                letter-spacing: -0.2px;
+                text-align: left;
+                color: var(--greyish);
+                margin-right: 24px;
+            }
+
+            .notOwn {
+                margin-top: 20px;
+                width: 300px;
+                padding: 14px;
+                background-color: var(--dark-blue-grey);
+                font-family: var(--main-font);
+                font-size: 15px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.2px;
+                text-align: left;
+                color: var(--text-white);
+                border-top-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            .own {
+                margin-top: 20px;
+                width: 300px;
+                padding: 14px;
+                background-color: var(--dark-blue-grey);
+                font-family: var(--main-font);
+                font-size: 15px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.2px;
+                text-align: left;
+                color: var(--text-white);
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            #headerText {
+                margin-top: 19px;
+            }
+
+            #closeButton {
+                position: absolute;
+                right: 16px;
+                top: 39px;
+                -ms-transform: rotate(45deg);
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+                font-size: 30px;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.2px;
+                text-align: center;
+                color: var(--text-white);
+            }
+
+            #profilePic {
+                margin-top: 15px;
+                width: 56px;
+                height: 56px;
+                border-radius: 56px;
+                background-color: green;
+                border: 2px solid var(--background-white);
+            }
+        </style>
+        <div on-click="_close" id="closeButton">
+            +
+        </div>
+        <div id="overlay">
+
+        </div>
+        <div id="header" class="layout vertical">
+            <div id="headerText" class="layout vertical">
+                <div class="headerText">Eindhoven</div>
+                <div class="headerText">Reageert meestal binnen 30 min</div>
+            </div>
+            <div class="layout horizontal center-justified">
+                <div id="profilePic">
+
+                </div>
+            </div>
+            <div class="headerText">Pim</div>
+
+
+        </div>
+        <div id="wrapperWrapper">
+
+            <div id="textDisplayArea" class="layout vertical">
+                <template is="dom-repeat" items="[[messages]]" as="message">
+                    <template is="dom-if" if="[[message.isOwn]]">
+                        <div class="layout horizontal">
+                            <div class="flex"></div>
+                            <div class="own">
+                                [[message.text]]
+                            </div>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="[[!message.isOwn]]">
+                        <div class="layout horizontal">
+                            <div class="notOwn">
+                                [[message.text]]
+                            </div>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </div>
+
+        <div id="footer" class="layout horizontal">
+            <div id="cameraImageWrapper" class="layout horizontal center-justified">
+                <div class="layout vertical center-justified">
+                    <img src="images/icons/camera.svg">
+                </div>
+            </div>
+            <div class="layout vertical center-justified">
+                <paper-input auto-focus on-keydown="_checkEnterPressed" value="{{message}}" no-label-float label="Start het gesprek">
+                </paper-input>
+            </div>
+            <div class="flex">
+
+            </div>
+            <div on-click="_sendMessage" id="sendButton" class="layout vertical center-justified">
+                Stuur
+            </div>
+        </div>
+
+
+    </template>
+
+    <script>
+        class QuestionChat extends Polymer.Element {
+            static get is() { return 'question-chat'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    visible: {
+                        type: Boolean,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: false,
+                    },
+                    message: {
+                        type: String,
+                        notify: true,
+                        value: '',
+                    },
+                    title: {
+                        type: String,
+                        notify: true,
+                    },
+                    messages: {
+                        type: Array,
+                        notify: true,
+                        value: [],
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+                let initialMessage = {
+                    'isOwn': false,
+                    'text': 'Hey! Ik zie dat je tijdens het aanvragen van het verhuizen hebt gedrukt op de support knop. Kan ik je ergens mee helpen?',
+                };
+                this.messages.push(initialMessage);
+            }
+
+            _lulz() {
+                let kek = [
+                    {'isOwn': false, 'text': 'Hoi ik ben Pim!'},
+                    {'isOwn': false, 'text': 'Hoe maakt u het?'},
+                    {'isOwn': false, 'text': 'Druk met uw ' + this.title + '?'},
+                    {'isOwn': false, 'text': 'Lekker chatten met Pim!'},
+                    {'isOwn': false, 'text': 'Ik ben Pim van Mijn-App :)'},
+                    {'isOwn': false, 'text': 'Ik hoop dat zo alles in orde is'},
+                    {'isOwn': false, 'text': 'Een ' + this.title + ' is altijd veel werk!'},
+                    {'isOwn': false, 'text': 'Nou nou.. Rustig aan hoor!'},
+                ];
+                setTimeout(() => {
+                    let temp = this.messages;
+                    temp.push(kek[this.randomIntFromInterval(0, kek.length)]);
+                    this.messages = [];
+                    this.messages = temp;
+                    this._scrollToTop();
+                }, this.randomIntFromInterval(500, 1500));
+            }
+
+            randomIntFromInterval(min, max) {
+                return Math.floor(Math.random() * (max - min + 1) + min);
+            }
+
+            _checkEnterPressed(e) {
+                if (e.keyCode === 13) {
+                    this._sendMessage();
+                }
+            }
+
+            _close() {
+                this.visible = false;
+            }
+
+            _sendMessage() {
+                if (this.message === '') {
+                    return;
+                }
+                let temp = this.messages;
+                temp.push({'isOwn': true, 'text': this.message});
+                this.messages = [];
+                this.messages = temp;
+                this.message = '';
+                this._lulz();
+                this._scrollToTop();
+            }
+
+            _scrollToTop() {
+                setTimeout(() => {
+                    this.$.wrapperWrapper.scrollTop = this.$.wrapperWrapper.scrollHeight;
+                }, 5);
+            }
+
+
+        }
+
+        window.customElements.define(QuestionChat.is, QuestionChat);
+    </script>
+</dom-module>

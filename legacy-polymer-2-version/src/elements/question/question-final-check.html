@@ -1,0 +1,203 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-final-check">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                width: calc(100vw - 32px);
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+                margin-bottom: 24px;
+            }
+
+            .answer {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                max-width: 200px;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            .adjustButton {
+                font-family: var(--main-font);
+                font-size: 13px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.77;
+                letter-spacing: -0.3px;
+                text-align: right;
+                color: var(--text-white);
+            }
+
+            .line {
+                margin-top: 15px;
+                margin-bottom: 16px;
+                height: 1px;
+                opacity: 0.5;
+                border-radius: 5px;
+                background-color: var(--suggestion-line-color);
+            }
+
+            .checkWrapper {
+                min-height: 46px;
+            }
+        </style>
+        <div id="titleWrapper" class="questionTitle">
+            Controleer je gegevens
+        </div>
+        <template is="dom-repeat" items="[[displayValues]]" as="reqValue" mutable-data>
+            <template is="dom-if" if="[[hasValue(reqValue)]]">
+                <div class="layout horizontal checkWrapper">
+
+                    <div class="layout vertical">
+                        <div class="questionSubTitle">[[reqValue.title]]</div>
+                        <div class="answer">{{_getValueToDisplay(reqValue, reqValue.value)}}</div>
+                    </div>
+
+                    <div class="flex"></div>
+                    <template is="dom-if" if="[[_hasGoto(reqValue.goto)]]">
+                        <div on-click="_adjustClicked" class="adjustButton layout vertical center-justified">Aanpassen</div>
+                    </template>
+                </div>
+                <div class="line"></div>
+            </template>
+        </template>
+
+    </template>
+
+    <script>
+        class QuestionFinalCheck extends Polymer.Element {
+            static get is() { return 'question-final-check'; }
+
+            static get properties() {
+                return {
+                    requestedValues: {
+                        type: Array,
+                        notify: true,
+                        reflectToAttribute: true,
+                        observer: '_changed',
+                    },
+                    displayValues: {
+                        type: Array,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                };
+            }
+
+            _changed() {
+                let temp = [];
+                for (var key in this.requestedValues) {
+                    temp.push(this.requestedValues[key]);
+                }
+                this.displayValues = temp;
+                this.notifyPath('displayValues');
+            }
+
+            _hasGoto(goto) {
+                return goto != null;
+            }
+
+            hasValue(requestedValue) {
+                return requestedValue.value != null;
+            }
+
+            _getValueToDisplay(val) {
+                if (val.placeholder != null) {
+                    return val.placeholder;
+                }
+                if (val.type != null) {
+                    if (val.type === 'location') {
+                        return val.value.lat + ' , ' + val.value.lng;
+                    }
+                    if (val.type === 'cost') {
+                        return '€' + val.value + '-';
+                    }
+                }
+                if (val.value === '' || val.value == null) {
+                    return '';
+                }
+                let type = getTypeOfVariable(val.value);
+                if (type === 'date') {
+                    return this._getDateDisplay(val.value);
+                } else if (type === 'object') {
+                    return this._getValueToDisplay(val.value);
+                } else if (type === 'array') {
+                    return this._getArrayDisplayValue(val.value);
+                } else if (type === 'boolean') {
+                    return this._getBooleanDisplayValue(val);
+                } else {
+                    return val.value;
+                }
+            }
+
+            _getDateDisplay(date) {
+                return new Date(date).yyyymmdd();
+            }
+
+            _getMultiTextDisplayValue(val) {
+                let result = [];
+                for (let i = 0; i < val.value.length; i++) {
+                    let temp = val.value[i].title + ':' + val.value[i].value;
+                    result.push(temp);
+                }
+                return result.join(' , ');
+            }
+
+            _getBooleanDisplayValue(val) {
+                if (val.value) {
+                    return 'Ja';
+                } else {
+                    return 'Nee';
+                }
+            }
+
+            _getArrayDisplayValue(array) {
+                let result = '';
+                for (let i = 0; i < array.length; i++) {
+                    result += this._getValueToDisplay(array[i]);
+                    if (i !== array.length - 1) {
+                        result += ' , ';
+                    }
+                }
+                return result;
+            }
+
+            _adjustClicked(e) {
+                this.dispatchEvent(
+                    new CustomEvent('goto',
+                        {detail: {'question_id': e.model.__data.reqValue.goto}, bubbles: true, composed: true}));
+            }
+
+
+        }
+
+        window.customElements.define(QuestionFinalCheck.is, QuestionFinalCheck);
+    </script>
+</dom-module>

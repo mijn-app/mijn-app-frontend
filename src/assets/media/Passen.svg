@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="452px" height="452px" viewBox="0 0 452 452" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>Passen</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="348" y="222" width="318" height="192" rx="7"></rect>
+        <filter x="-57.5%" y="-94.3%" width="215.1%" height="290.6%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="82" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.105882353   0 0 0 0 0.145098039   0 0 0 0 0.305882353  0 0 0 0.1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-3" x="0" y="0" width="318" height="192" rx="7"></rect>
+    </defs>
+    <g id="Passen" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#F5F6F9" x="0" y="0" width="452" height="452"></rect>
+        <rect id="Rectangle-5" opacity="0.0199999996" fill-rule="nonzero" x="0" y="0" width="452" height="452"></rect>
+        <g id="Group-2" transform="translate(226.000000, 226.000000) rotate(45.000000) translate(-226.000000, -226.000000) translate(-281.000000, -92.000000)">
+            <g id="Rectangle-10" fill-rule="nonzero">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#19234C" xlink:href="#path-1"></use>
+            </g>
+            <g id="Group-6" transform="translate(348.000000, 0.000000)" fill-rule="nonzero">
+                <rect id="Rectangle-10" fill="#FFFFFF" x="0" y="0" width="318" height="192" rx="7"></rect>
+                <rect id="Rectangle-12" fill="#1C254E" opacity="0.243191964" x="0" y="116" width="318" height="50"></rect>
+                <g id="Group" transform="translate(30.000000, 30.000000)">
+                    <rect id="Rectangle-6" fill="#FF6261" x="70" y="0" width="25" height="6" rx="3"></rect>
+                    <rect id="Rectangle-6" fill="#E8E9ED" x="0" y="16" width="110" height="6" rx="3"></rect>
+                </g>
+            </g>
+            <g id="Group-6-Copy" transform="translate(348.000000, 444.000000)" fill-rule="nonzero">
+                <rect id="Rectangle-10" fill="#FFFFFF" x="0" y="0" width="318" height="192" rx="7"></rect>
+                <rect id="Rectangle-12" fill="#1C254E" opacity="0.286774554" x="0" y="116" width="318" height="50"></rect>
+                <g id="Group" transform="translate(30.000000, 30.000000)">
+                    <rect id="Rectangle-6" fill="#09B2E3" x="0" y="0" width="60" height="6" rx="3"></rect>
+                    <rect id="Rectangle-6" fill="#09B2E3" x="70" y="0" width="25" height="6" rx="3"></rect>
+                    <rect id="Rectangle-6" fill="#E8E9ED" x="0" y="16" width="110" height="6" rx="3"></rect>
+                </g>
+            </g>
+            <g id="Group-6-Copy-2" transform="translate(0.000000, 332.000000)" fill-rule="nonzero">
+                <rect id="Rectangle-10" fill="#FFFFFF" x="0" y="0" width="318" height="192" rx="7"></rect>
+                <rect id="Rectangle-12" fill="#D4D9E2" x="0" y="116" width="318" height="50"></rect>
+            </g>
+            <g id="Group-6-Copy-3" transform="translate(0.000000, 110.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                <rect id="Rectangle-10" x="0" y="0" width="318" height="192" rx="7"></rect>
+            </g>
+            <g id="Group-6-Copy-4" transform="translate(696.000000, 110.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                <rect id="Rectangle-10" x="0" y="0" width="318" height="192" rx="7"></rect>
+            </g>
+            <g id="Group-6-Copy-5" transform="translate(696.000000, 332.000000)" fill-rule="nonzero">
+                <rect id="Rectangle-10" fill="#FFFFFF" x="0" y="0" width="318" height="192" rx="7"></rect>
+                <g id="Group" transform="translate(30.000000, 30.000000)">
+                    <rect id="Rectangle-6" fill="#AE5EA3" x="0" y="0" width="60" height="6" rx="3"></rect>
+                    <rect id="Rectangle-6" fill="#E8E9ED" x="0" y="16" width="110" height="6" rx="3"></rect>
+                </g>
+            </g>
+            <g id="Oval-2" transform="translate(348.000000, 222.000000)">
+                <mask id="mask-4" fill="white">
+                    <use xlink:href="#path-3"></use>
+                </mask>
+                <g id="Mask" fill-rule="nonzero"></g>
+                <circle fill="#464E6F" fill-rule="nonzero" mask="url(#mask-4)" cx="266.5" cy="51.5" r="21.5"></circle>
+            </g>
+            <g id="Group" transform="translate(502.000000, 362.000000)" fill-rule="nonzero">
+                <rect id="Rectangle-6" fill="#FFBA38" x="21" y="0" width="72" height="6" rx="3"></rect>
+                <rect id="Rectangle-6" fill="#FFBA38" x="103" y="0" width="31" height="6" rx="3"></rect>
+                <rect id="Rectangle-6" fill="#E8E9ED" x="0" y="16" width="134" height="6" rx="3"></rect>
+            </g>
+            <rect id="Rectangle-11" fill="#FFFFFF" fill-rule="nonzero" x="378" y="300" width="58" height="38" rx="3"></rect>
+        </g>
+    </g>
+</svg>

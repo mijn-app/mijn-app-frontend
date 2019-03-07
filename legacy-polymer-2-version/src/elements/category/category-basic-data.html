@@ -1,0 +1,145 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="category-basic-data">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                padding-top: 7px;
+                height: 100%;
+            }
+
+            #profilePic {
+                border-radius: 49px;
+                width: 49px;
+                height: 49px;
+                background-color: red;
+            }
+
+            #subTit {
+                margin-top: 30px;
+                margin-bottom: 18px;
+            }
+
+            .line {
+                height: 1px;
+                border-radius: 5px;
+                background-color: var(--suggestion-line-color);
+                margin-top: 20px;
+                margin-bottom: 13px;
+            }
+
+            .dataTitle {
+                opacity: 0.4;
+                font-family: var(--main-font);
+                font-size: 16px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.44;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+        </style>
+        <div class="layout horizontal">
+            <div class="mainTitle">
+                Ad de Vries
+            </div>
+            <div class="flex">
+
+            </div>
+            <div id="profilePic">
+
+            </div>
+        </div>
+        <div id="subTit" class="subTitle">
+            Basisgegevens
+        </div>
+        <template is="dom-repeat" items="[[data]]">
+            <div class="layout vertical">
+                <span class="dataTitle">[[item.title]]</span>
+                <span class="subSubSubTitle">[[item.value]]</span>
+                <div class="line"></div>
+            </div>
+
+        </template>
+    </template>
+
+    <script>
+        class CategoryBasicData extends Polymer.Element {
+            static get is() { return 'category-basic-data'; }
+
+            static get properties() {
+                return {
+                    data: {
+                        type: Array,
+                        notify: true,
+                        value: [{
+                            'title': 'Naam',
+                            'value': 'Ad de Vries',
+                        },
+                        {
+                            'title': 'Geboortedatum',
+                            'value': '13-04-1964',
+                        },
+                        {
+                            'title': 'Geboorteplaats',
+                            'value': 'Utrecht',
+                        },
+                        {
+                            'title': 'Geboorteland',
+                            'value': 'Nederland',
+                        },
+                        {
+                            'title': 'Geregistreerd partnerschap',
+                            'value': 'Evelien de Vries',
+                        },
+                        {
+                            'title': 'Kinderen',
+                            'value': 'Thomas de Vries',
+                        },
+                        {
+                            'title': 'Nationaliteit',
+                            'value': 'Nederlands',
+                        },
+                        {
+                            'title': 'BSN',
+                            'value': '2003430123',
+                        },
+                        {
+                            'title': 'Adres',
+                            'value': 'Aalsterweg 322, 5644 RL Eindhoven',
+                        },
+                        {
+                            'title': 'Telefoonnummer',
+                            'value': '+31 65 44 34 14',
+                        },
+                        {
+                            'title': 'Email',
+                            'value': 'Ad.de.vries@gmail.com',
+                        }],
+                    },
+                };
+            }
+
+
+        }
+
+        window.customElements.define(CategoryBasicData.is, CategoryBasicData);
+    </script>
+</dom-module>

@@ -1,0 +1,237 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../general/back-button.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="card-detail">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                padding-top: 37px;
+                padding-left: 16px;
+                padding-right: 16px;
+                padding-bottom: 40px;
+                min-height: 100vh;
+            }
+
+            .cardTitle {
+                font-family: var(--main-font);
+                font-size: 30px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.5px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            #backButton {
+                margin-bottom: 26px;
+            }
+
+            #activateButton {
+                margin-top: 34px;
+                background-color: var(--background-white);
+                padding-top: 25px;
+                border-radius: 3px;
+                padding-bottom: 18px;
+                margin-bottom: 29px;
+            }
+
+            #activateText {
+                margin-top: 9px;
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--dark-blue-grey);
+            }
+
+            .cardDetailSubTitle {
+                margin-bottom: 20px;
+                font-family: var(--main-font);
+                font-size: 24px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: 0px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            .cardAttText {
+                opacity: 0.6;
+                font-family: var(--main-font);
+                font-size: 16px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.44;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            .cardAttValue {
+                font-family: var(--main-font);
+                font-size: 19.6px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.64;
+                letter-spacing: -0.4px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            #photo {
+                height: 81px;
+                width: 81px;
+                border-radius: 81px;
+                background-color: var(--background-white);
+            }
+
+            #attTitle {
+                margin-top: 34px;
+            }
+
+
+            .line {
+                height: 1px;
+                opacity: 0.4;
+                border-radius: 5px;
+                background-color: var(--suggestion-line-color);
+                margin-top: 6px;
+                margin-bottom: 10px;
+            }
+        </style>
+        <back-button id="backButton" display-white></back-button>
+        <div class="cardTitle">
+            [[currentCard.title]]
+        </div>
+        <div id="activateButton" class="layout horizontal center-justified">
+            <div class="layout vertical">
+                <img src="images/icons/wifi.svg">
+                <div id="activateText">Activeer deze kaart</div>
+            </div>
+        </div>
+        <div class="cardDetailSubTitle">Pasfoto</div>
+        <div class="layout horizontal">
+            <div id="photo"></div>
+            <div class="flex"></div>
+            <div class="cardAttText layout vertical center-justified">Wijzig foto</div>
+        </div>
+        <div id="attTitle" class="cardDetailSubTitle">Basisgegevens</div>
+        <template is="dom-repeat" items="[[currentCard.basic_data]]">
+            <div class="cardAttText">
+                [[item.title]]
+            </div>
+            <div class="cardAttValue">
+                [[item.value]]
+            </div>
+            <div class="line"></div>
+        </template>
+    </template>
+
+    <script>
+        class CardDetail extends Polymer.Element {
+            static get is() { return 'card-detail'; }
+
+            static get properties() {
+                return {
+                    currentCardID: {
+                        type: Number,
+                        notify: true,
+                        observer: '_currentCardIDChanged',
+                    },
+                    cards: {
+                        type: Array,
+                        value: [{
+                            'title': 'DIT IS PAS EINDHOVEN',
+                            'icon': 'someiconurl',
+                            'background_color': '#e41613',
+                            'basic_data': [
+                                {
+                                    'title': 'Naam',
+                                    'value': 'Ad de Vries',
+                                },
+                                {
+                                    'title': 'Geboortedatum',
+                                    'value': '13-04-1964',
+                                },
+                                {
+                                    'title': 'Geboorteplaats',
+                                    'value': 'Utrecht',
+                                },
+                                {
+                                    'title': 'Geboorteland',
+                                    'value': 'Nederland',
+                                },
+                            ],
+                        },
+                        {
+                            'title': 'Bonuskaart',
+                            'icon': 'someiconurl',
+                            'background_color': '#009fe5',
+                            'basic_data': [
+                                {
+                                    'title': 'Naam',
+                                    'value': 'Ad de Vries',
+                                },
+                                {
+                                    'title': 'Geboortedatum',
+                                    'value': '13-04-1964',
+                                },
+                                {
+                                    'title': 'Geboorteplaats',
+                                    'value': 'Utrecht',
+                                },
+                                {
+                                    'title': 'Geboorteland',
+                                    'value': 'Nederland',
+                                },
+                            ],
+                        }],
+                    },
+                    currentCard: {
+                        type: Object,
+                        notify: true,
+                    },
+
+                };
+            }
+
+            _currentCardIDChanged() {
+                this.currentCard = this.cards[this.currentCardID];
+                if( this.currentCard == null) {
+                    return;
+                }
+                this.style.backgroundColor = this.currentCard.background_color;
+            }
+
+
+        }
+
+        window.customElements.define(CardDetail.is, CardDetail);
+    </script>
+</dom-module>

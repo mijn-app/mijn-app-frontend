@@ -1,0 +1,134 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="elements/general/search-input.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="app-notifications">
+  <template>
+    <style include="iron-flex shared-styles">
+      :host {
+        display: block;
+        padding: 29px 16px 80px 16px;
+      }
+
+      .title {
+        margin-bottom: 46px;
+      }
+
+      .notification {
+        position: relative;
+        background-color: var(--search-input-grey);
+        border-radius: 5px;
+        padding: 14px;
+        margin-bottom: 20px;
+      }
+
+      .line {
+        margin-top: 15px;
+        margin-bottom: 10px;
+        border: solid 1px var(--notification-line-color);
+      }
+
+      .textContainer {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .grapefruit {
+        background-color: var(--grapefruit-color);
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 6px;
+        top: 21px;
+        left: 13px;
+      }
+
+      .time {
+        position: absolute;
+        top: 14px;
+        right: 22px;
+      }
+
+      .arrow {
+        margin-left: 15px;
+      }
+    </style>
+
+
+    <div class="layout vertical">
+      <div class="title mainTitle">
+        Notificaties
+      </div>
+
+      <template is="dom-repeat" items="[[notifications]]" as="notification">
+        <div class="notification layout vertical">
+          <div class="grapefruit">
+          </div>
+          <div class="groteskMedium time">
+            [[notification.time]]
+          </div>
+          <div class="textContainer layout vertical">
+            <span class="subSubTitle">[[notification.title]]</span>
+            <span class="hKGroteskMedium">[[notification.text]]</span>
+          </div>
+          <div class="line"></div>
+          <div class="layout horizontal center-justified">
+            <span class="subSubSubTitle">Bekijk alle gegevens</span>
+            <img class="arrow" src="images/icons/arrow-right.svg"></img>
+
+          </div>
+        </div>
+      </template>
+
+
+
+    </div>
+
+  </template>
+
+  <script>
+    class AppNotifications extends Polymer.Element {
+      static get is() { return 'app-notifications'; }
+
+      static get properties() {
+        return {
+          notifications: {
+            type: Array,
+            value: [{
+              title: 'Aanvraag verhuizing',
+              time: 'Zojuist',
+              text: 'We hebben jouw verhuisverzoek binnen. Je krijgt een bericht als de verhuizing is doorgevoerd.',
+            },
+            {
+              title: 'Toestemming Zorgverzekeraar X',
+              time: 'Zojuist',
+              text: 'Je hebt Zorgverzekeraar X toestemming gegeven om je persoonlijke gegevens te mogen lezen.',
+            },
+            {
+              title: 'Aankondiging huwelijk 🎉',
+              time: 'Zojuist',
+              text: 'Gefeliciteerd! Wij hebben het aanvragen van je huwelijk ontvangen. Wij geven een bericht als de aanvraag is doorgevoerd.',
+            },
+            ],
+          },
+        };
+      }
+    }
+
+    window.customElements.define(AppNotifications.is, AppNotifications);
+  </script>
+</dom-module>

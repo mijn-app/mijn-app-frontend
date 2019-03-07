@@ -1,0 +1,83 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/google-youtube/google-youtube.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="video-player">
+       <template>
+              <style include="iron-flex shared-styles">
+                     :host {
+                            display: block;
+                            background-color: var(--background-black);
+                            height: 100vh;
+                            width: 100vw;
+                            z-index: 999;
+                     }
+
+                     #videoWrapper {
+                            height: 100vh;
+                            width: 100vw;
+                     }
+
+                     #closeButton {
+                            position: absolute;
+                            right: 25px;
+                            top: 25px;
+                            -ms-transform: rotate(45deg);
+                            -webkit-transform: rotate(45deg);
+                            transform: rotate(45deg);
+                            font-size: 45px;
+                            font-weight: 100;
+                            text-align: center;
+                            color: var(--text-white);
+                     }
+              </style>
+              <div on-click="_close" id="closeButton">
+                     +
+              </div>
+              <div id="videoWrapper" class="layout vertical center-justified">
+                     <google-youtube id="youtube" playsupported video-id="[[videoId]]" height="270px" width="480px" rel="0" start="5" autoplay="1">
+                     </google-youtube>
+              </div>
+       </template>
+
+       <script>
+              class VideoPlayer extends Polymer.Element {
+                     static get is() { return 'video-player'; }
+
+                     static get properties() {
+                            return {
+                                   videoPlayerOpen: {
+                                          type: Boolean,
+                                          notify: true,
+                                          value: false,
+                                   },
+                                   videoId: {
+                                          type: String,
+                                          notify: true,
+                                   }
+                            };
+                     }
+
+                     _close() {
+                            this.$.youtube.pause();
+                            this.videoPlayerOpen = false;
+                     }
+
+              }
+
+              window.customElements.define(VideoPlayer.is, VideoPlayer);
+       </script>
+</dom-module>

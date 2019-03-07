@@ -1,0 +1,188 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link href="fonts/stylesheet.css" rel="stylesheet">
+
+<!-- shared styles for all views -->
+<dom-module id="shared-styles">
+  <template>
+    <style>
+      :root {
+        --dark-blue-grey: #19224c;
+        --main-font: 'HK Grotesk';
+        --background-white: white;
+        --background-black: black;
+        --text-white: white;
+        --warm-grey: #999999;
+        --search-input-grey: #f7f7f7;
+        --add-category-grey: #f5f5f5;
+        --suggestion-line-color: #eff1f3;
+        --grapefruit-color: #ff6261;
+        --notification-line-color: #ecedee;
+        --subtitle-color: #FFC1C3;
+        --active-green: #d4f6c2;
+        --inactive-grey: #8A90A3;
+        --greyish: #a3a3a3;
+        --checked-green: #10cb2c;
+        --contract-item-text-color: #6a6d7b;
+        --aquamarine: #00d9c7;
+        
+      }
+
+      .mainTitle {
+        font-family: var(--main-font);
+        font-size: 34px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: left;
+        color: var(--dark-blue-grey);
+      }
+
+      .subTitle {
+        font-family: var(--main-font);
+        font-size: 24px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0px;
+        text-align: left;
+        color: var(--dark-blue-grey);
+      }
+
+      .subSubTitle {
+        font-family: var(--main-font);
+        font-size: 18px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.28;
+        letter-spacing: -0.3px;
+        text-align: left;
+        color: var(--dark-blue-grey);
+      }
+
+      .subSubSubTitle {
+        font-family: var(--main-font);
+        font-size: 18px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.28;
+        letter-spacing: -0.4px;
+        text-align: left;
+        color: var(--dark-blue-grey);
+      }
+
+      .hKGroteskMedium {
+        opacity: 0.7;
+        font-family: var(--main-font);
+        font-size: 14px;
+        font-weight: 500;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.64;
+        letter-spacing: -0.3px;
+        text-align: left;
+        color: var(--dark-blue-grey);
+      }
+
+      .groteskMedium {
+        font-family: var(--main-font);
+        font-size: 13px;
+        font-weight: 500;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.4px;
+        text-align: center;
+        color: var(--warm-grey);
+      }
+
+      .groteskBold {
+        font-family: var(--main-font);
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.21;
+        letter-spacing: -0.2px;
+        text-align: center;
+        color: var(--warm-grey);
+      }
+
+      .questionTitle {
+        font-family: var(--main-font);
+        font-size: 34px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: left;
+        color: var(--text-white);
+      }
+
+      .questionSubTitle {
+        font-family: var(--main-font);
+        opacity: 0.8;
+        font-size: 18px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.28;
+        letter-spacing: -0.4px;
+        text-align: left;
+        color: #ffffff;
+      }
+
+      .checkboxRound {
+        position: relative;
+        width: 22px;
+        height: 22px;
+        border-radius: 22px;
+        border: 2px solid var(--dark-blue-grey);
+      }
+
+      .checkboxSquare {
+        position: relative;
+        width: 22px;
+        height: 22px;
+        border-radius: 7px;
+        border: 2px solid var(--dark-blue-grey);
+      }
+
+      .check {
+        border: 1.5px solid var(--background-white);
+        border-top: none;
+        border-right: none;
+        content: "";
+        height: 6px;
+        left: 4px;
+        position: absolute;
+        top: 5px;
+        transform: rotate(-45deg);
+        width: 12px;
+      }
+
+      .selected {
+        background-color: var(--checked-green);
+        border-color: var(--checked-green);
+      }
+
+   
+    </style>
+  </template>
+</dom-module>

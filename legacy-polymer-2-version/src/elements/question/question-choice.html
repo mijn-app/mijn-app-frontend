@@ -1,0 +1,128 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-choice">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+            }
+
+            .option {
+                height: 111px;
+                background-color: var(--background-white);
+                margin-top: 10px;
+                border-radius: 3px;
+            }
+
+            .choiceText {
+                margin-top: 9px;
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            #optionWrapper {
+                margin-top: 29px;
+            }
+        </style>
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div class="questionSubTitle">
+            [[question.subtitle]]
+        </div>
+        <div id="optionWrapper">
+
+            <template is="dom-repeat" items="[[question.options]]" as="option">
+                <div on-click="_optionClicked" class="option layout vertical center-justified">
+                    <template is="dom-if" if="{{_hasImage(option)}}">
+                        <div class="layout horizontal center-justified">
+                            <img src="[[_getImageUrl(option.icon)]]">
+                        </div>
+                    </template>
+                    <div class="choiceText layout horizontal center-justified">
+                        [[option.text]]
+                    </div>
+                </div>
+            </template>
+        </div>
+
+    </template>
+    <script>
+        class QuestionChoice extends Polymer.Element {
+            static get is() { return 'question-choice'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: String,
+                        notify: true,
+                        value: [],
+                        observer: '_answerChanged',
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                };
+            }
+
+            _getImageUrl(image) {
+                return 'images/dynamic-icons/' + image;
+            }
+
+            _optionClicked(e) {
+                if (this.question.data_properties != null) {
+                    this.answer = e.model.__data.option;
+                }
+                this.dispatchEvent(new CustomEvent('goto', {detail: {'question_id': e.model.__data.option.goto}, bubbles: true, composed: true}));
+            }
+
+            _hasImage(option) {
+                return option.icon != null;
+            }
+
+            _answerChanged() {
+                this.answerValid = true;
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+            }
+        }
+
+        window.customElements.define(QuestionChoice.is, QuestionChoice);
+    </script>
+</dom-module>

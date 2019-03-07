@@ -1,0 +1,207 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../general/display-instance.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-overview">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                font-family: var(--main-font);
+                padding-left: 16px;
+                padding-right: 16px;
+                padding-bottom: 25px;
+            }
+
+            #title {
+                font-size: 34px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .outerWrapper {
+                margin-top: 24px;
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .smallTitle {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 600;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.4px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .bullet {
+                width: 7px;
+                height: 7px;
+                border-radius: 7px;
+                background-color: var(--dark-blue-grey);
+                margin-right: 14px;
+            }
+
+            .listItem {
+                opacity: 0.7;
+                font-family: var(--main-font);
+                font-size: 14px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.64;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+
+            .docTitle {
+                margin-top: 65px;
+                margin-bottom: 13px;
+            }
+
+            .indexItem {
+                width: 18px;
+                height: 18px;
+                border-radius: 18px;
+                background-color: var(--dark-blue-grey);
+                margin-right: 9px;
+                font-family: var(--main-font);
+                font-size: 11px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: normal;
+                text-align: center;
+                color: var(--text-white);
+            }
+
+            .stepItem {
+                margin-top: 10px;
+            }
+
+            .stepTitle {
+                margin-top: 29px;
+            }
+
+            #subTitleOverview {
+                margin-top: 7px;
+            }
+
+            #costDesc {
+                margin-top: 7px;
+            }
+        </style>
+        <div id="title">
+            [[capitalizeFirstLetter(title)]] doorgeven
+        </div>
+        <template is="dom-if" if="{{_hasSubtitle(overview)}}">
+            <div id="subTitleOverview" class="listItem">
+                [[overview.sub_title]]
+            </div>
+        </template>
+        <div class="outerWrapper">
+            <template is="dom-repeat" items="[[overview.send_to]]" as="instance">
+                <display-instance instance="[[instance]]"></display-instance>
+            </template>
+            <div class="smallTitle docTitle">
+                Benodigde documenten
+            </div>
+            <div>
+                <template is="dom-repeat" items="[[overview.needed_documents]]" as="document">
+                    <div class="layout horizontal">
+                        <div class="layout vertical center-justified">
+                            <div class="bullet"></div>
+
+                        </div>
+                        <div class="listItem">[[document]]</div>
+                    </div>
+
+                </template>
+            </div>
+            <div class="smallTitle stepTitle">
+                Deze stappen ga je doorlopen
+            </div>
+            <template is="dom-repeat" items="[[overview.steps]]" as="step">
+                <div class="layout horizontal stepItem">
+                    <div class="layout vertical center-justified">
+                        <div class="indexItem layout vertical center-justified">[[_getIndex(index)]]</div>
+
+                    </div>
+                    <div class="listItem">[[step]]</div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_hasCosts(overview)}}">
+                <div class="smallTitle stepTitle">
+                    Kosten
+                </div>
+                <div id="costDesc" class="listItem">
+                    [[overview.cost_description]]
+                </div>
+            </template>
+        </div>
+
+    </template>
+
+    <script>
+        class QuestionOverview extends Polymer.Element {
+            static get is() { return 'question-overview'; }
+
+            static get properties() {
+                return {
+                    title: {
+                        type: String,
+                        notify: true,
+                        value: '',
+                    },
+                    overview: {
+                        type: Object,
+                        notify: true,
+                    },
+                };
+            }
+
+            _hasSubtitle(overview) {
+                return this.overview.sub_title != null;
+            }
+
+            _hasCosts(overview) {
+                return this.overview.cost_description != null;
+            }
+
+            _getIndex(i) {
+                return i + 1;
+            }
+
+            capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+
+        }
+
+        window.customElements.define(QuestionOverview.is, QuestionOverview);
+    </script>
+</dom-module>

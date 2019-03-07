@@ -1,0 +1,180 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="elements/general/search-input.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="app-home">
+  <template>
+    <style include="iron-flex shared-styles">
+      :host {
+        display: block;
+        padding: 29px 16px 80px 16px;
+      }
+
+      #camera {
+        width: 23.1px;
+        height: 18px;
+        margin-bottom: 9px;
+      }
+
+      #searchInput {
+        margin-top: 13px;
+        margin-bottom: 32px;
+      }
+
+      .box {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        width: 42.5vw;
+        height: calc(42.5vw * 1.055);
+        background-color: red;
+      }
+
+      #addCategory {
+        background-color: var(--add-category-grey);
+      }
+
+      #plus {
+        color: var(--warm-grey);
+        text-align: center;
+        font-size: 35px;
+      }
+    </style>
+
+    <div class="layout vertical">
+
+      <div class="layout horizontal">
+        <div class="mainTitle">Mijn app-home</div>
+        <div class="flex"></div>
+        <div class="layout vertical">
+          <div class="flex"> </div>
+          <img id="camera" src="images/icons/camera.svg"></img>
+        </div>
+      </div>
+
+      <search-input on-click="_goToSearch" id="searchInput"></search-input>
+
+      <div class="subTitle">Mijn gegevens</div>
+
+      <div class="layout horizontal">
+        <div class="layout vertical">
+          <template is="dom-repeat" items="[[leftColumn]]" as="category">
+            <div on-click="_goToCategory" class="box">
+            </div>
+            <div class="subSubTitle">
+              [[category.title]]
+            </div>
+          </template>
+          <div id="addCategory" on-click="_addCategoryClicked" class="box layout vertical center-justified">
+            <span id="plus">+</span>
+            <span class="groteskBold">Categorie toevoegen</span>
+          </div>
+        </div>
+        <div class="flex">
+        </div>
+        <div class="layout vertical">
+          <template is="dom-repeat" items="[[rightColumn]]" as="category">
+            <div on-click="_goToCategory" class="box">
+            </div>
+            <div class="subSubTitle">
+              [[category.title]]
+            </div>
+          </template>
+        </div>
+      </div>
+
+    </div>
+
+
+  </template>
+
+  <script>
+    class AppHome extends Polymer.Element {
+      static get is() { return 'app-home'; }
+
+      static get properties() {
+        return {
+          categories: {
+            type: Array,
+            value: [{
+              title: 'Basisgegevens',
+              image: 'imageurl',
+              id: 1,
+            },
+            {
+              title: 'Machtigingen',
+              image: 'imageurl',
+              id: 2,
+            },
+            {
+              title: 'Contracten',
+              image: 'imageurl',
+              id: 3,
+            },
+            {
+              title: 'Passen',
+              image: 'imageurl',
+              id: 4,
+            },
+            ],
+            observer: '_categoriesChanged',
+          },
+          leftColumn: {
+            type: Array,
+            notify: true,
+            value: [],
+          },
+          rightColumn: {
+            type: Array,
+            notify: true,
+            value: [],
+          },
+        };
+      }
+
+      _categoriesChanged() {
+        let tempRight = [];
+        let tempLeft = [];
+        for (let i = 0; i < this.categories.length; i++) {
+          if (i % 2 === 0) {
+            tempLeft.push(this.categories[i]);
+          } else {
+            tempRight.push(this.categories[i]);
+          }
+        }
+        this.leftColumn = tempLeft;
+        this.rightColumn = tempRight;
+      }
+
+      _addCategoryClicked() {
+        window.location.href = '#/app-categories/5';
+      }
+
+      _goToCategory(e) {
+        if(e.model.__data.category.id === 2) {
+          return;
+        }
+        window.location.href = '/#/app-categories/' + e.model.__data.category.id;
+      }
+
+      _goToSearch() {
+        window.location.href = '/#/app-search';
+      }
+    }
+
+    window.customElements.define(AppHome.is, AppHome);
+  </script>
+</dom-module>

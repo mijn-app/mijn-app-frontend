@@ -1,0 +1,184 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="category-contracts">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                padding-top: 7px;
+                height: 100%;
+            }
+
+            #subTit {
+                margin-top: 30px;
+                margin-bottom: 18px;
+            }
+
+            .line {
+                height: 1px;
+                border-radius: 5px;
+                background-color: var(--suggestion-line-color);
+                margin-top: 20px;
+                margin-bottom: 13px;
+            }
+
+            .imageDisplay {
+                width: 24px;
+                height: 24px;
+                border-radius: 24px;
+                background-color: red;
+            }
+
+            .contractWrapper {
+                border-radius: 5px;
+                margin-top: 20px;
+                background-color: var(--search-input-grey);
+                padding-top: 18px;
+                padding-right: 16px;
+                padding-left: 16px;
+                padding-bottom: 14px;
+            }
+
+            .item {
+                font-family: var(--main-font);
+                font-size: 15px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.53;
+                letter-spacing: -0.2px;
+                text-align: left;
+                color: var(--contract-item-text-color);
+            }
+
+            .arrow {
+                margin-left: 15px;
+            }
+
+            .spec {
+                margin-top: 14px;
+                font-family: var(--main-font);
+                font-size: 15px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.53;
+                letter-spacing: -0.2px;
+                text-align: right;
+                color: var(--contract-item-text-color);
+            }
+        </style>
+        <div class="mainTitle">
+            Contracten
+        </div>
+        <template is="dom-repeat" items="[[contracts]]" as="contract">
+            <div class="contractWrapper layout vertical">
+
+                <div class="layout horizontal">
+                    <span class="subSubSubTitle">[[contract.title]]</span>
+                    <div class="flex"></div>
+                    <div class="imageDisplay"></div>
+                </div>
+                <template is="dom-repeat" items="[[contract.specifications]]" as="spec">
+                    <div class="spec layout horizontal">
+                        <div>
+                            [[spec.title]]
+                        </div>
+                        <div class="flex"></div>
+                        <div>
+                            [[spec.value]]
+                        </div>
+                    </div>
+
+
+                </template>
+                <div class="line"></div>
+                <div on-click="_checkAll" class="layout horizontal center-justified">
+                    <span class="subSubSubTitle">Bekijk alle gegevens</span>
+                    <img class="arrow" src="images/icons/arrow-right.svg"></img>
+                </div>
+            </div>
+
+
+        </template>
+    </template>
+
+    <script>
+        class CategoryContracts extends Polymer.Element {
+            static get is() { return 'category-contracts'; }
+
+            static get properties() {
+                return {
+                    contracts: {
+                        type: Array,
+                        notify: true,
+                        value: [{
+                            'title': 'Zorgverzekering',
+                            'icon': 'someiconurl',
+                            'specifications': [
+                                {
+                                    'title': 'Polisnummer',
+                                    'value': '2398423',
+                                },
+                                {
+                                    'title': 'Premie',
+                                    'value': '€98,- per maand',
+                                },
+                            ],
+                        },
+                        {
+                            'title': 'Energiecontract',
+                            'icon': 'someiconurl',
+                            'specifications': [
+                                {
+                                    'title': 'Verbruik',
+                                    'value': '1900 kWh',
+                                },
+                                {
+                                    'title': 'Kosten',
+                                    'value': '€140,- per maand',
+                                },
+                            ],
+                        },
+                        {
+                            'title': 'Reisverzekering',
+                            'icon': 'someiconurl',
+                            'specifications': [
+                                {
+                                    'title': 'Polisnummer',
+                                    'value': '2398423',
+                                },
+                                {
+                                    'title': 'Premie',
+                                    'value': '€5,- per maand',
+                                },
+                            ],
+                        }],
+                    },
+                };
+            }
+
+            _checkAll(e) {
+                window.location.href = '/#/contract-detail';
+            }
+
+
+        }
+
+        window.customElements.define(CategoryContracts.is, CategoryContracts);
+    </script>
+</dom-module>

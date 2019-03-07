@@ -1,0 +1,126 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-radiobutton-group">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+                width: calc(100vw - 32px);
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+            }
+
+            .checkboxOption {
+                background-color: var(--background-white);
+                height: 56px;
+                width: calc(100% - 40px);
+                margin-top: 10px;
+                border-radius: 3px;
+                padding-left: 23px;
+                padding-right: 17px;
+            }
+
+            .checkBoxText {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+        </style>
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div class="questionSubTitle">
+            [[question.subtitle]]
+        </div>
+        <template is="dom-repeat" items="[[question.options]]" as="option">
+            <div on-click="_divCheckboxHasBeenClicked" id="[[index]]" class="checkboxOption layout horizontal">
+                <div class="checkBoxText layout vertical center-justified">
+                    [[option.text]]
+                </div>
+                <div class="flex"></div>
+                <div class="layout vertical center-justified">
+                    <div id="check[[index]]" class="checkboxRound">
+                        <div class="check">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </template>
+
+    <script>
+        class QuestionRadiobuttonGroup extends Polymer.Element {
+            static get is() { return 'question-radiobutton-group'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: String,
+                        notify: true,
+                        value: [],
+                        observer: '_answerChanged',
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        notify: true,
+                        value: false,
+                    },
+                };
+            }
+
+            _divCheckboxHasBeenClicked(e) {
+                this._uncheckAll();
+                this.shadowRoot.querySelector('#check' + e.model.__data.index).classList.toggle('selected');
+                this.answer = e.model.__data.option.value;
+            }
+
+            _uncheckAll() {
+                let radioButtons = this.shadowRoot.querySelectorAll('.checkboxRound');
+                for (let i = 0; i < radioButtons.length; i++) {
+                    radioButtons[i].classList.remove('selected');
+                }
+            }
+
+            _answerChanged() {
+                this.answerValid = this.answer.length > 0;
+                this.dispatchEvent(new CustomEvent('answer-update', { detail: { 'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid }, bubbles: true, composed: true }));
+            }
+
+        }
+
+        window.customElements.define(QuestionRadiobuttonGroup.is, QuestionRadiobuttonGroup);
+    </script>
+</dom-module>

@@ -1,0 +1,163 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="category-manage">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                padding-top: 7px;
+                height: 100%;
+            }
+
+            #mainTit {
+                margin-bottom: 33px;
+            }
+
+            .icon {
+                width: 20px;
+                min-width: 20px;
+                height: 20px;
+                background-color: var(--dark-blue-grey);
+                margin-right: 21px;
+            }
+
+            .line {
+                height: 1px;
+                border-radius: 5px;
+                background-color: var(--suggestion-line-color);
+                margin-top: 19px;
+                margin-bottom: 19px;
+            }
+
+            .addImage {
+                margin-right: 23px;
+            }
+
+            .addCategory {
+                position: fixed;
+                height: 131px;
+                top: calc(100vh - 131px);
+                left: 0px;
+                width: 100vw;
+
+                z-index: 99999;
+                display: block;
+            }
+
+            #gradientPart {
+                height: 70px;
+                background: -moz-linear-gradient(bottom, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0) 100%);
+                /* FF3.6-15 */
+                background: -webkit-linear-gradient(bottom, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0) 100%);
+                /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(to top, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0) 100%);
+                /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff', GradientType=20);
+                /* IE6-9 */
+            }
+
+            #nonGradient {
+                height: 61px;
+                background-color: white;
+            }
+        </style>
+        <div id="mainTit" class="mainTitle">
+            Categorieën
+        </div>
+        <template is="dom-repeat" items="[[categories]]" as="category">
+            <div class="layout horizontal">
+                <div class="icon"></div>
+                <div class="subSubSubTitle">[[category.title]]</div>
+                <div class="flex"> </div>
+                <img class="addImage" src="images/icons/add.svg">
+            </div>
+            <div class="line"></div>
+        </template>
+        <div class="addCategory layout vertical">
+            <div id="gradientPart"></div>
+            <div id="nonGradient" class="layout horizontal center-justified">
+                <div class="subSubTitle">
+                    <img src="images/icons/add.svg"> Voeg een eigen categorie toe</div>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        class CategoryManage extends Polymer.Element {
+            static get is() { return 'category-manage'; }
+
+            static get properties() {
+                return {
+                    categories: {
+                        type: Array,
+                        notify: true,
+                        value: [{
+                            'title': 'Wonen',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Gezondheid',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Vrije tijd',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Familie',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Persoonsgegevens',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Verzekeringen',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Werk',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Milieu',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Contracten',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Passen',
+                            'icon': 'someiconurl',
+                        },
+                        {
+                            'title': 'Machtigingen',
+                            'icon': 'someiconurl',
+                        },
+                        ],
+                    },
+                };
+            }
+
+
+        }
+
+        window.customElements.define(CategoryManage.is, CategoryManage);
+    </script>
+</dom-module>

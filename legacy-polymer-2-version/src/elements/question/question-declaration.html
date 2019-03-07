@@ -1,0 +1,108 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-declaration">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .checkboxOption {
+                background-color: var(--background-white);
+                height: 56px;
+                width: calc(100% - 40px);
+                margin-top: 10px;
+                border-radius: 3px;
+                padding-left: 23px;
+                padding-right: 17px;
+            }
+
+            .checkBoxText {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+        </style>
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div class="checkboxOption layout horizontal">
+            <div class="checkBoxText layout vertical center-justified">
+                [[question.declaration_text]]
+            </div>
+            <div class="flex"></div>
+            <div class="layout vertical center-justified">
+                <div on-click="_checkboxClicked" class="checkboxRound" id="checkButton">
+                    <div class="check">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        class QuestionDeclaration extends Polymer.Element {
+            static get is() { return 'question-declaration'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: Boolean,
+                        notify: true,
+                        value: false,
+                        observer: '_answerChanged',
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        notify: true,
+                        value: false,
+                    },
+                };
+            }
+
+            _checkboxClicked(e) {
+                let declared = this.$.checkButton.classList.toggle('selected');
+                this.answer = declared;
+            }
+
+            _answerChanged() {
+                this.answerValid = this.answer;
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+            }
+
+        }
+
+        window.customElements.define(QuestionDeclaration.is, QuestionDeclaration);
+    </script>
+</dom-module>

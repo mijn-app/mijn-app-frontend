@@ -1,0 +1,181 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../general/video-player.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-multiple-choice">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                width: calc(100vw - 32px);
+                padding-left: 16px;
+                padding-right: 16px;
+                padding-bottom: 30px;
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+            }
+
+            .option {
+                height: 56px;
+                background-color: var(--background-white);
+                border-radius: 3px;
+                padding-left: 22px;
+                padding-right: 15px;
+            }
+
+            .choiceText {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--dark-blue-grey);
+            }
+
+            #optionOuterWrapper {
+                margin-top: 29px;
+                padding-bottom: 40px;
+            }
+
+            .videoThumbnail {
+                width: calc(100vw - 32px);
+                height: 178px;
+            }
+
+            .optionWrapper {
+                margin-top: 10px;
+            }
+
+            .hide {
+                display: none;
+            }
+
+            :host([video-player-open]) video-player {
+                display: block;
+            }
+
+            video-player {
+                position: absolute;
+                display: none;
+                top: 0;
+                left: 0;
+            }
+        </style>
+
+        <video-player video-id="[[videoID]]" video-player-open="{{videoPlayerOpen}}"></video-player>
+
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div class="questionSubTitle">
+            [[question.subtitle]]
+        </div>
+        <div id="optionOuterWrapper">
+            <template is="dom-repeat" items="[[question.options]]" as="option">
+                <div class="optionWrapper layout vertical">
+                    <img on-click="_videoClicked" class$="[[_getVideoThumbClass(option)]]" src="{{_thumbNailUrl(option)}}">
+                    <div on-click="_optionClicked" class="option layout horizontal">
+                        <div class="choiceText layout vertical center-justified">
+                            [[option.text]]
+                        </div>
+                        <div class="flex"></div>
+                        <div class="layout vertical center-justified">
+                            <img src="images/icons/nav-arrow-right.svg">
+                        </div>
+                    </div>
+                </div>
+
+            </template>
+        </div>
+
+    </template>
+    <script>
+        class QuestionMultipleChoice extends Polymer.Element {
+            static get is() { return 'question-multiple-choice'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: String,
+                        notify: true,
+                        observer: '_answerChanged',
+                    },
+                    videoPlayerOpen: {
+                        type: Boolean,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: false,
+                    },
+                    videoID: {
+                        type: String,
+                        notify: true,
+                    },
+                };
+            }
+
+            _optionClicked(e) {
+                this.answer = e.model.__data.option;
+                this.dispatchEvent(new CustomEvent('next', {bubbles: true, composed: true}));
+            }
+
+            _videoClicked(e) {
+                this.videoID = e.model.__data.option.video_url.split('watch?v=')[1];
+                this.videoPlayerOpen = true;
+            }
+
+            _getVideoThumbClass(option) {
+                if (this._isVideoOption(option)) {
+                    return 'videoThumbnail';
+                } else {
+                    return 'hide';
+                }
+            }
+
+            _thumbNailUrl(option) {
+                if (!this._isVideoOption(option)) {
+                    return;
+                }
+                return 'https://img.youtube.com/vi/' + option.video_url.split('watch?v=')[1] + '/0.jpg';
+            }
+
+            _isVideoOption(option) {
+                return option.video_url != null;
+            }
+
+            _answerChanged() {
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': true}, bubbles: true, composed: true}));
+            }
+
+
+        }
+
+        window.customElements.define(QuestionMultipleChoice.is, QuestionMultipleChoice);
+    </script>
+</dom-module>

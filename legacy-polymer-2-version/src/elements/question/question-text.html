@@ -1,0 +1,226 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-text">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                height: 100%;
+                width: calc(100vw - 32px);
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #titleWrapper {
+                max-width: 219px;
+            }
+
+            paper-input {
+                --paper-input-container: {
+                    background-color: var(--grapefruit-color);
+                }
+                ;
+
+                --paper-input-container-label: {
+                    font-family: var(--main-font);
+                    font-size: 16px;
+                    font-weight: 600;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.44;
+                    letter-spacing: -0.2px;
+                    text-align: left;
+                    color: var(--subtitle-color);
+                }
+                ;
+
+                --paper-input-container-input: {
+                    font-family: var(--main-font);
+                    font-size: 18px;
+                    font-weight: 600;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.28;
+                    letter-spacing: -0.4px;
+                    text-align: left;
+                    color: #ffffff;
+                }
+                ;
+
+                --paper-input-container-underline: {
+                    display: none;
+                }
+                ;
+
+                --paper-input-container-underline-focus: {
+                    display: none;
+                }
+                ;
+            }
+
+            #addressFormat {
+                padding-left: 23px;
+                height: 56px;
+                background-color: var(--background-white);
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                border-radius: 3px;
+                text-align: left;
+                color: var(--dark-blue-grey);
+            }
+        </style>
+        <div id="titleWrapper" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div>
+            <paper-input id="test" auto-focus value="{{answer}}" no-label-float label="[[question.subtitle]]">
+            </paper-input>
+        </div>
+        <template is="dom-if" if="[[_showAutoComplete(addressSuggestion, answer)]]">
+            <div id="addressFormat" on-click="_setAutoCompleteAnswer" class="layout vertical center-justified">
+                [[addressSuggestion]]
+            </div>
+        </template>
+
+    </template>
+
+    <script>
+        class QuestionText extends Polymer.Element {
+            static get is() { return 'question-text'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                        observer: '_questionChanged',
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    answer: {
+                        type: String,
+                        notify: true,
+                        observer: '_answerChanged',
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    hasAddressAutocomplete: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    addressSuggestion: {
+                        type: String,
+                        notify: true,
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+            }
+
+            _questionChanged() {
+                this.addressSuggestion = '';
+                this.hasAddressAutocomplete = false;
+                this.answerValid = false;
+                this.answer = '';
+                if (this.question.metadata != null) {
+                    if (this.question.metadata.autocomplete != null) {
+                        if (this.question.metadata.autocomplete === 'address') {
+                            this.hasAddressAutocomplete = true;
+                        }
+                    }
+                }
+            }
+
+            _setAutoCompleteAnswer() {
+                this.answerValid = true;
+                this.answer = this.addressSuggestion;
+            }
+
+            _showAutoComplete(suggestion) {
+                return this.hasAddressAutocomplete && this.addressSuggestion.length > 0 && this.answer !== this.addressSuggestion;
+            }
+
+            initAutocomplete() {
+                if (this.answerValid) {
+                    return;
+                }
+                if (this.answer.length === 0) {
+                    return;
+                }
+                const regex = /^\s*(\d{4})[\s,_,-]*(\w{2})[\s,_,-]*(\d+([\s,_,-]*([a-zA-Z]+|\d+))?)?[\s,_,-]*$/;
+                let details = this.answer.match(regex);
+
+                let postcodeNummers = details[1];
+                let postcodeLetters = details[2];
+                let huisnummer = details[3] ? details[3].replace(' ', '') : null;
+
+                let q = (postcodeNummers ? postcodeNummers : '') + (postcodeLetters ? postcodeLetters : '');
+                if (huisnummer) {
+                    q += '%20and%20' + huisnummer;
+                }
+
+                if (q && q.length > 3) {
+                    let xmlHttp = new XMLHttpRequest();
+                    xmlHttp.onreadystatechange = () => {
+                        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                            let resp = JSON.parse(xmlHttp.responseText);
+                            if (
+                                resp.response
+                                && resp.response.docs
+                                && resp.response.docs.length > 0
+                                && resp.response.docs[0].weergavenaam
+                            ) {
+                                this.addressSuggestion = resp.response.docs[0].weergavenaam;
+                            }
+                        }
+                    };
+                    let url = 'https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?q=' + q;
+                    xmlHttp.open('GET', url, true); // true for asynchronous
+                    xmlHttp.send(null);
+                }
+            }
+
+            _answerChanged() {
+                this._debounceFilter = Polymer.Debouncer.debounce(this._debounceFilter, Polymer.Async.timeOut.after(500), () => {
+                    this.initAutocomplete();
+                });
+                this.answerValid = false;
+                if (!this.hasAddressAutocomplete) {
+                    this.answerValid = this.answer.length > 0;
+                }else{
+                    this.answerValid = this.answer === this.addressSuggestion;
+                }
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.answer, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+            }
+
+        }
+
+        window.customElements.define(QuestionText.is, QuestionText);
+    </script>
+</dom-module>

@@ -1,0 +1,253 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="elements/general/search-input.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="app-search">
+  <template>
+    <style include="iron-flex shared-styles">
+      :host {
+        display: block;
+        padding: 29px 16px 90px 16px;
+      }
+
+      #searchInput {
+        margin-right: 16px;
+      }
+
+      .serviceProvider {
+        margin-top: 25px;
+        margin-bottom: 21px;
+      }
+
+      .circle {
+        width: 71px;
+        height: 71px;
+        border-radius: 71px;
+        background-color: var(--search-input-grey);
+        margin-bottom: 7px;
+      }
+
+      #suggestions {
+        margin-top: 19px;
+        margin-bottom: 32px;
+      }
+
+      .serviceProviderWrapper {
+        width: 95px;
+      }
+
+      .arrow {
+        margin-right: 24px;
+      }
+
+      .line {
+        height: 1px;
+        border-radius: 5px;
+        background-color: var(--suggestion-line-color);
+        margin-top: 26px;
+        margin-bottom: 24px;
+      }
+
+      #empty {
+        margin-top: 30px;
+      }
+    </style>
+
+
+    <div class="layout vertical">
+
+      <div class="layout horizontal">
+        <search-input value="{{searchValue}}" id="searchInput"></search-input>
+        <div on-click="_goToHome" class="layout vertical center-justified">
+          <span class="groteskBold">Annuleer</span>
+        </div>
+      </div>
+      <template is="dom-if" if="{{_hasNoResults(serviceProviders,suggestions)}}">
+        <div id="empty" class="subSubTitle">
+          Er zijn helaas geen resultaten gevonden.
+        </div>
+      </template>
+      <template is="dom-if" if="{{_ifServiceProviderFilter(serviceProviders)}}">
+        <div class="subTitle serviceProvider">
+          Dienstverleners
+        </div>
+      </template>
+      <div class="layout horizontal">
+
+        <template is="dom-repeat" items="[[serviceProviders]]" as="serviceProvider" filter="_serviceProviderFilter">
+          <div class="layout vertical serviceProviderWrapper">
+            <div class="layout horizontal center-justified">
+              <div class="circle">
+              </div>
+            </div>
+            <span class="groteskMedium">[[serviceProvider.title]]</span>
+          </div>
+        </template>
+      </div>
+      <template is="dom-if" if="{{_ifSuggestionFilter(suggestions)}}">
+        <div id="suggestions" class="subTitle">
+          Suggesties
+        </div>
+      </template>
+
+      <template is="dom-repeat" items="[[suggestions]]" as="suggestion" filter="_suggestionFilter">
+        <div on-click="_suggestionClicked" class="layout horizontal">
+          <span class="subSubSubTitle">[[suggestion.title]]</span>
+          <div class="flex"></div>
+          <img class="arrow" src="images/icons/arrow.svg"></img>
+        </div>
+        <div class="line"></div>
+      </template>
+
+    </div>
+
+
+  </template>
+
+  <script>
+    class AppSearch extends Polymer.Element {
+      static get is() { return 'app-search'; }
+
+      static get properties() {
+        return {
+          searchValue: {
+            type: String,
+            notify: true,
+            observer: '_searchInputChanged',
+            value: '',
+          },
+          suggestions: {
+            type: Array,
+            notify: true,
+            reflectToAttribtue: true,
+            value: [
+              {
+                'title': 'Ik heb een briljant idee',
+                'url': '/#/question-form/brilliantidea',
+              },
+              {
+                'title': 'Ik heb een klacht',
+                'url': '/#/question-form/complaint',
+              },
+              {
+                'title': 'Ik heb (bijna) geen onderdak',
+              },
+              {
+                'title': 'Ik ga verhuizen',
+                'url': '/#/question-form/moving',
+              },
+              {
+                'title': 'Ik wil bezwaar maken',
+                'url': '/#/question-form/objection',
+              },
+              {
+                'title': 'Compliment geven',
+                'url': '/#/question-form/compliment',
+              },
+              {
+                'title': 'Ik wil parkeren',
+              },
+              {
+                'title': 'Ik ga trouwen',
+                'url': '/#/question-form/marrying',
+              },
+            ],
+          },
+          serviceProviders: {
+            type: Array,
+            notify: true,
+            value: [
+              {
+                'title': 'Zorgverzekeraar',
+              },
+              {
+                'title': 'Belastingdienst',
+              },
+              {
+                'title': 'Gemeente Eindhoven',
+              },
+            ],
+          },
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.focus();
+      }
+
+      focus() {
+        this.$.searchInput.focus();
+      }
+
+      _suggestionClicked(e) {
+        if (e.model.__data.suggestion.url == null) {
+          return;
+        }
+        window.location.href = e.model.__data.suggestion.url;
+      }
+
+      _searchInputChanged() {
+        let temp = this.suggestions;
+        this.suggestions = [];
+        this.suggestions = temp;
+        let temp2 = this.serviceProviders;
+        this.serviceProviders = [];
+        this.serviceProviders = temp2;
+      }
+
+      _ifSuggestionFilter(suggestions) {
+        let res = false;
+        for (let i = 0; i < this.suggestions.length; i++) {
+          if (this.suggestions[i].title.toLowerCase().includes(this.searchValue.toLowerCase())) {
+            res = true;
+          }
+        }
+        return res;
+      }
+
+      _suggestionFilter(suggestion) {
+        return suggestion.title.toLowerCase().includes(this.searchValue.toLowerCase());
+      }
+
+      _ifServiceProviderFilter(serviceProviders) {
+        let res = false;
+        for (let i = 0; i < this.serviceProviders.length; i++) {
+          if (this.serviceProviders[i].title.toLowerCase().includes(this.searchValue.toLowerCase())) {
+            res = true;
+          }
+        }
+        return res;
+      }
+
+      _hasNoResults() {
+        return !this._ifServiceProviderFilter() && !this._ifSuggestionFilter();
+      }
+
+      _serviceProviderFilter(serviceProvider) {
+        return serviceProvider.title.toLowerCase().includes(this.searchValue.toLowerCase());
+      }
+
+      _goToHome() {
+        window.location.href = '/#/app-home';
+      }
+    }
+
+
+    window.customElements.define(AppSearch.is, AppSearch);
+  </script>
+</dom-module>

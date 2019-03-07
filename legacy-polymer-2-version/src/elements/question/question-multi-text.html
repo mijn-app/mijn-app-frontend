@@ -1,0 +1,215 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="question-multi-text">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                width: calc(100vw - 32px);
+                height: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #titleOfQuestion {
+                max-width: 219px;
+            }
+
+            paper-input {
+                --paper-input-container: {
+                    background-color: var(--grapefruit-color);
+                }
+                ;
+
+                --paper-input-container-label: {
+                    font-family: var(--main-font);
+                    font-size: 16px;
+                    font-weight: 600;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.44;
+                    letter-spacing: -0.2px;
+                    text-align: left;
+                    color: var(--subtitle-color);
+                }
+                ;
+
+                --paper-input-container-input: {
+                    font-family: var(--main-font);
+                    font-size: 18px;
+                    font-weight: 600;
+                    font-style: normal;
+                    font-stretch: normal;
+                    line-height: 1.28;
+                    letter-spacing: -0.4px;
+                    text-align: left;
+                    color: #ffffff;
+                }
+                ;
+
+                --paper-input-container-underline: {
+                    display: none;
+                }
+                ;
+
+                --paper-input-container-underline-focus: {
+                    display: none;
+                }
+                ;
+            }
+
+            .line {
+                height: 1px;
+                opacity: 0.5;
+                border-radius: 5px;
+                background-color: var(--background-white);
+                margin-top: 5px;
+                width: 100%;
+                margin-bottom: 12px;
+            }
+
+            .textValueWrapper {
+                margin-top: 40px;
+            }
+
+            .option {
+                background-color: var(--background-white);
+                height: 56px;
+                margin-top: 10px;
+            }
+
+            .optionText {
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--dark-blue-grey);
+            }
+
+            img {
+                margin-right: 49px;
+            }
+
+            #optionWrapper {
+                margin-top: 49px;
+            }
+        </style>
+
+        <div id="titleOfQuestion" class="questionTitle">
+            [[question.title]]
+        </div>
+        <div class="questionSubTitle">
+            [[question.subtitle]]
+        </div>
+        <div class="textValueWrapper">
+            <template is="dom-repeat" items="[[textFields]]" as="field">
+                <div class="questionSubTitle">
+                    [[field.text]]
+                </div>
+                <paper-input on-value-changed="_textFieldsChanged" auto-focus value="{{field.value}}" no-label-float>
+                </paper-input>
+                <div class="line">
+                </div>
+            </template>
+        </div>
+        <div id="optionWrapper">
+            <template is="dom-repeat" items="[[question.options]]" as="option">
+                <div class="option layout horizontal center-justified">
+                    <img src="[[_getImageUrl(option.icon)]]">
+                    <div on-click="_goToOption" class="optionText layout vertical center-justified">[[option.text]]</div>
+                </div>
+            </template>
+        </div>
+
+    </template>
+    <script>
+        class QuestionMultiText extends Polymer.Element {
+            static get is() { return 'question-multi-text'; }
+
+            static get properties() {
+                return {
+                    question: {
+                        type: Object,
+                        reflectToAttribute: true,
+                        observer: '_questionChanged',
+                    },
+                    bind: {
+                        type: String,
+                        notify: true,
+                    },
+                    textFields: {
+                        type: Array,
+                        notify: true,
+                        value: [],
+                    },
+                    answerValid: {
+                        type: Boolean,
+                        notify: true,
+                        value: false,
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+                this._textFieldsChanged();
+            }
+
+            _questionChanged() {
+                this.textFields = this.question.list;
+            }
+
+            _textFieldsChanged() {
+                setTimeout(() => {
+                    if (this.textFields == null) {
+                        return;
+                    }
+                    let answerValidTemp = true;
+                    for (let i = 0; i < this.textFields.length; i++) {
+                        if (this.textFields[i].value == null) {
+                            answerValidTemp = false;
+                            break;
+                        }
+                        answerValidTemp = answerValidTemp && this.textFields[i].value.length > 0;
+                    }
+                    this.answerValid = answerValidTemp;
+                    this._answerChanged();
+                }, 10);
+            }
+
+            _answerChanged() {
+                this.dispatchEvent(new CustomEvent('answer-update', {detail: {'answer': this.textFields, 'data_properties': this.question.data_properties, 'question_id': this.question.id, 'valid': this.answerValid}, bubbles: true, composed: true}));
+            }
+
+            _goToOption(e) {
+                this.dispatchEvent(new CustomEvent('goto', {detail: {'question_id': e.model.__data.option.goto}, bubbles: true, composed: true}));
+            }
+
+            _getImageUrl(image) {
+                return 'images/dynamic-icons/' + image;
+            }
+
+        }
+
+        window.customElements.define(QuestionMultiText.is, QuestionMultiText);
+    </script>
+</dom-module>

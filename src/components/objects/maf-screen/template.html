@@ -1,0 +1,15 @@
+<div class="Wrapper">
+  <div class="Inner">
+    <dom-if if="[[_hasBack(onBack)]]">
+      <template>
+        <div class="ButtonContainer">
+          <maki-button on-click="[[onBack]]" size="34" stroke="0" font-size="14" heading="Ga terug">
+            <maki-icon-back-arrow />
+          </maki-button>
+        </div>
+      </template>
+    </dom-if>
+    <maki-header>[[heading]]</maki-header>
+    <slot></slot>
+  </div>
+</div>

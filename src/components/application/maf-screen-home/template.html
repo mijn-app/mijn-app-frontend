@@ -1,0 +1,36 @@
+<div class="Wrapper">
+  <img src="/assets/logo-itsme.svg" id="ItsMeLogo" hidden$="[[!loggedInWithItsMe]]"/>
+  <maf-screen heading="Mijn dashboard">
+    <div class="SearchWrapper" on-click="_goJourneys">
+      <maki-input elevation="0" stroke="1" placeholder="Wat wil je regelen?"></maki-input>
+    </div>
+    <div class="TilesWrapper">
+      <div class="TilesTitle">
+        Mijn gegevens
+      </div>
+      <div class="Tiles">
+        <dom-repeat items="{{tiles}}" as="tile">
+          <template>
+            <div class="Tile" on-click="_clickHandler">
+              <div class="TileMedia">
+                <div class="TileMediaInner">
+                  <img src="[[tile.asset]]" />
+                </div>
+              </div>
+              <div class="TileTitle">[[tile.title]]</div>
+            </div>
+          </template>
+        </dom-repeat>
+        <div class="Tile" on-click="_clickHandler" style="opacity: 0.25; cursor:not-allowed;">
+          <div class=" TileMedia ">
+            <div class="TileMediaInner ">
+              <img src="/assets/media/Passen.svg " />
+            </div>
+          </div>
+          <div class="TileTitle ">Passen</div>
+        </div>
+      </div>
+    </div>
+    <div id="ItsMeLoginToast">U bent succesvol ingelogd met ItsMe.</div>
+  </maf-screen>
+</div>

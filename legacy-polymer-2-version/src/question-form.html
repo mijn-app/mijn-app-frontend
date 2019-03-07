@@ -1,0 +1,754 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="elements/question/question-text.html">
+<link rel="import" href="elements/question/question-multi-text.html">
+<link rel="import" href="elements/question/question-calendar.html">
+<link rel="import" href="elements/question/question-checkbox-group.html">
+<link rel="import" href="elements/question/question-choice.html">
+<link rel="import" href="elements/question/question-documents-photo.html">
+<link rel="import" href="elements/question/question-documents-upload.html">
+<link rel="import" href="elements/question/question-chat.html">
+<link rel="import" href="elements/question/question-final-check.html">
+<link rel="import" href="elements/question/question-share.html">
+<link rel="import" href="elements/question/question-done.html">
+<link rel="import" href="elements/question/question-overview.html">
+<link rel="import" href="elements/question/question-location.html">
+<link rel="import" href="elements/question/question-multiple-choice.html">
+<link rel="import" href="elements/question/question-declaration.html">
+<link rel="import" href="elements/question/question-radiobutton-group.html">
+
+<link rel="import" href="elements/general/back-button.html">
+
+<!-- CSS imports -->
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="question-form">
+    <template>
+        <style include="iron-flex shared-styles">
+            :host {
+                display: block;
+                padding-top: 21px;
+                padding-bottom: 27px;
+                height: calc(100vh - 48px);
+                @apply(--layout-vertical);
+            }
+
+            :host([in-main-form]) {
+                background-color: var(--grapefruit-color);
+            }
+
+            :host([!in-main-form]) {
+                background-color: var(--background-white);
+            }
+
+            :host([in-main-form]) #questionFooter {
+                display: flex;
+            }
+
+            :host([in-main-form]) #stop {
+                display: flex;
+            }
+
+            :host([in-main-form]) #finalizeButtonWrapper {
+                display: none;
+            }
+
+            #stop {
+                display: none;
+            }
+
+            :host([display-skip]) #skip {
+                display: flex;
+            }
+
+            :host([display-next]) #next {
+                display: flex;
+            }
+
+            :host([next-disabled]) #next {
+                pointer-events: none;
+                opacity: 0.5;
+            }
+
+
+            #prevText {
+                display: none;
+            }
+
+            :host([display-prev]) #prevText {
+                display: block;
+            }
+
+            #questionHeader {
+                margin-bottom: 26px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #arrow {
+                height: 12px;
+                margin-right: 10px;
+            }
+
+            .smallText {
+                font-family: var(--main-font);
+                font-size: 14px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: -0.2px;
+                text-align: left;
+                color: var(--text-white);
+            }
+
+            #chat {
+                width: 50px;
+                height: 50px;
+                border-radius: 50px;
+                background-color: var(--dark-blue-grey);
+            }
+
+            .navigation {
+                height: 56px;
+            }
+
+            #prev {
+                width: 142px;
+            }
+
+            #skip {
+                display: none;
+                width: 142px;
+                border-radius: 3px;
+                border: 1px solid var(--background-white);
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--text-white);
+            }
+
+            #next {
+                display: none;
+                background-color: var(--background-white);
+                border-radius: 3px;
+                width: 142px;
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--dark-blue-grey);
+            }
+
+            #questionFooter {
+                display: none;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            question-chat {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            #finalizeButtonWrapper {
+                display: flex;
+            }
+
+            #finalizeButton {
+                width: 226px;
+                height: 56px;
+                border-radius: 3px;
+                background-color: var(--grapefruit-color);
+                font-family: var(--main-font);
+                font-size: 18px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.28;
+                letter-spacing: -0.3px;
+                text-align: center;
+                color: var(--text-white);
+            }
+
+            #arrowWhite {
+                margin-left: 26px;
+            }
+
+            .middleWrapper {
+                display: flex;
+                width: 100vw;
+                height: calc(100vh - 180px);
+                max-height: calc(100vh - 180px);
+                overflow-y: auto;
+            }
+
+            #costButton {
+                position: relative;
+                width: 50px;
+                height: 50px;
+                border-radius: 50px;
+                background-color: var(--background-white);
+                margin-right: 16px;
+            }
+
+            #costDisplay {
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                width: 29px;
+                height: 29px;
+                border-radius: 29px;
+                background-color: var(--dark-blue-grey);
+                font-family: var(--main-font);
+                font-size: 12px;
+                font-weight: 500;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.92;
+                letter-spacing: -0.2px;
+                text-align: center;
+                color: var(--text-white);
+
+            }
+
+            #backWrapper {
+                margin-top: 20px;
+            }
+        </style>
+
+        <question-chat title="[[title]]" id="chatPopup"></question-chat>
+
+        <div id="questionHeader" class="layout horizontal">
+            <template is="dom-if" if="[[_isOverview(currentQuestionID)]]">
+                <back-button on-click="_stop" id="backWrapper"></back-button>
+            </template>
+            <div on-click="_stop" id="stop" class="smallText layout horizontal">
+                <div class="layout vertical center-justified">
+                    <img id="arrow" src="images/icons/arrow-left.svg">
+                </div>
+                <div class="layout vertical center-justified">
+                    Stoppen
+                </div>
+            </div>
+            <div class="flex">
+            </div>
+            <template is="dom-if" if="[[inMainForm]]">
+                <template is="dom-if" if="[[hasCost]]">
+                    <div id="costButton">
+                        <div id="costDisplay" class="layout vertical center-justified">
+                            [[_getCostDisplay(requestedValues)]]
+                        </div>
+                    </div>
+                </template>
+                <div on-click="_chatClicked" id="chat" class="layout horizontal center-justified">
+                    <img src="images/icons/chat.svg">
+                </div>
+            </template>
+        </div>
+
+        <div class="middleWrapper">
+            <iron-pages attr-for-selected="id" selected="[[currentQuestionID]]">
+                <template id="questionList" is="dom-repeat" items="{{questions}}">
+                    <template is="dom-if" if="[[_isTextType(item.type)]]">
+                        <question-text id="[[item.id]]" question="[[item]]"></question-text>
+                    </template>
+                    <template is="dom-if" if="[[_isCalendarType(item.type)]]">
+                        <question-calendar id="[[item.id]]" question="[[item]]"></question-calendar>
+                    </template>
+                    <template is="dom-if" if="[[_isCheckboxGroupType(item.type)]]">
+                        <question-checkbox-group id="[[item.id]]" question="[[item]]"></question-checkbox-group>
+                    </template>
+                    <template is="dom-if" if="[[_isChoiceType(item.type)]]">
+                        <question-choice id="[[item.id]]" question="[[item]]"></question-choice>
+                    </template>
+                    <template is="dom-if" if="[[_isPhotoDocumentsType(item.type)]]">
+                        <question-documents-photo class="photoDocs" id="[[item.id]]" question="[[item]]"></question-documents-photo>
+                    </template>
+                    <template is="dom-if" if="[[_isUploadDocumentsType(item.type)]]">
+                        <question-documents-upload id="[[item.id]]" question="[[item]]"></question-documents-upload>
+                    </template>
+                    <template is="dom-if" if="[[_isMultiTextType(item.type)]]">
+                        <question-multi-text id="[[item.id]]" question="[[item]]"></question-multi-text>
+                    </template>
+                    <template is="dom-if" if="[[_isLocationType(item.type)]]">
+                        <question-location id="[[item.id]]" question="[[item]]"></question-location>
+                    </template>
+                    <template is="dom-if" if="[[_isMultipleChoiceType(item.type)]]">
+                        <question-multiple-choice id="[[item.id]]" question="[[item]]"></question-multiple-choice>
+                    </template>
+                    <template is="dom-if" if="[[_isDeclarationType(item.type)]]">
+                        <question-declaration id="[[item.id]]" question="[[item]]"></question-declaration>
+                    </template>
+                    <template is="dom-if" if="[[_isRadiobuttonGroupType(item.type)]]">
+                        <question-radiobutton-group id="[[item.id]]" question="[[item]]"></question-radiobutton-group>
+                    </template>
+                    <template is="dom-if" if="[[_isUnkown(item.type)]]">
+                    </template>
+                </template>
+                <question-final-check id="finalCheck" requested-values="[[requestedValues]]"></question-final-check>
+                <question-share title="[[title]]" id="shareForm"></question-share>
+                <question-done title="[[title]]" id="doneForm"></question-done>
+                <question-overview overview="[[overview]]" title="[[title]]" id="overviewForm"></question-overview>
+            </iron-pages>
+        </div>
+
+        <div on-click="_done" id="finalizeButtonWrapper" class="layout horizontal center-justified">
+            <div id="finalizeButton" class="layout vertical center-justified">
+                <div class="layout horizontal center-justified">
+                    [[nextText]]
+                    <img id="arrowWhite" src="images/icons/white-arrow.svg">
+                </div>
+            </div>
+        </div>
+
+        <div id="questionFooter" class="navigation layout horizontal">
+            <div on-click="_prev" id="prev" class="smallText layout vertical center-justified">
+                <span id="prevText">Vorige</span>
+
+            </div>
+            <div class="flex"></div>
+            <div on-click="_skip" id="skip" class="layout vertical center-justified">
+                <span>Overslaan</span>
+            </div>
+            <div on-click="_next" id="next" class="layout vertical center-justified">
+                <span>[[nextText]]</span>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        class QuestionForm extends Polymer.Element {
+            static get is() { return 'question-form'; }
+
+            static get properties() {
+                return {
+                    formName: {
+                        type: String,
+                        notify: true,
+                        observer: '_formNameChanged',
+                    },
+                    title: {
+                        type: String,
+                        notify: true,
+                        value: '',
+                    },
+                    requestedValues: {
+                        type: Array,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: {},
+                    },
+                    questions: {
+                        type: Array,
+                        notify: true,
+                        value: [],
+                    },
+                    overview: {
+                        type: Object,
+                        notify: true,
+                    },
+                    currentQuestion: {
+                        type: Object,
+                        notify: true,
+                        // observer: '_currentQuestionChanged',
+                    },
+                    currentQuestionID: {
+                        type: Number,
+                        notify: true,
+                    },
+                    currentQuestionIndex: {
+                        type: Number,
+                        notify: true,
+                    },
+                    nextText: {
+                        type: String,
+                        notify: true,
+                        value: 'Volgende',
+                    },
+                    nextDisabled: {
+                        type: String,
+                        reflectToAttribute: true,
+                        notify: true,
+                        value: true,
+                    },
+                    displayNext: {
+                        type: Boolean,
+                        reflectToAttribute: true,
+                        notify: true,
+                        value: true,
+                    },
+                    displaySkip: {
+                        type: Boolean,
+                        reflectToAttribute: true,
+                        notify: true,
+                        value: false,
+                    },
+                    displayPrev: {
+                        type: Boolean,
+                        reflectToAttribute: true,
+                        notify: true,
+                        value: true,
+                    },
+                    history: {
+                        type: Array,
+                        notify: true,
+                        value: [],
+                    },
+                    inMainForm: {
+                        type: Boolean,
+                        reflectToAttribute: true,
+                        notify: true,
+                    },
+                    hasCost: {
+                        type: Boolean,
+                        notify: true,
+                        value: false,
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+                window.addEventListener('answer-update', this._answerUpdate.bind(this));
+                window.addEventListener('goto', this._gotoQuestion.bind(this));
+                window.addEventListener('next', this._next.bind(this));
+            }
+
+
+            _getCostDisplay() {
+                if (this.requestedValues['cost'] == null) {
+                    return '€0';
+                }
+                return '€' + this.requestedValues['cost'].value;
+            }
+
+            _formNameChanged() {
+                if (this.formName == null) {
+                    return;
+                }
+                if (this.formName === '') {
+                    return;
+                }
+                fetch('../jsonquestion/' + this.formName + '.json').then((response) => {
+                    return response.json();
+                }).then((json) => {
+                    this.initializeForm(json);
+                });
+            }
+
+            _updateCost() {
+                if (this.hasCost) {
+                    let totalCost = 0;
+                    for (var key in this.requestedValues) {
+                        let curVal = this.requestedValues[key];
+                        if (curVal.value == null) {
+                            continue;
+                        }
+                        let type = getTypeOfVariable(curVal.value);
+                        if (type === 'object') {
+                            if (curVal.value.cost != null) {
+                                totalCost += curVal.value.cost;
+                            }
+                        } else if (type === 'array') {
+                            for (let j = 0; j < curVal.value.length; j++) {
+                                let curSubItem = curVal.value[j];
+                                if (curSubItem.value == null) {
+                                    continue;
+                                }
+                                let subItemType = getTypeOfVariable(curSubItem);
+                                if (subItemType === 'object') {
+                                    if (curSubItem.cost != null) {
+                                        totalCost += curSubItem.cost;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    this.requestedValues['cost'].value = totalCost;
+                }
+            }
+
+            initializeForm(form) {
+                this.history = [];
+                this.requestedValues = {};
+                // this.requestedValues = JSON.parse(JSON.stringify(form.requested_values));
+                this.questions = [];
+                this.$.questionList.render();
+                this.questions = JSON.parse(JSON.stringify(form.questions));
+                this.overview = {};
+                this.overview = form.overview;
+                this.title = form.title;
+                this.nextText = 'Starten';
+                this.hasCost = false;
+                if (form.cost) {
+                    this.hasCost = true;
+                    this.requestedValues['cost'] = {
+                        'value': 0,
+                        'title': 'Prijs',
+                        'type': 'cost',
+                    };
+                }
+                // if debuggin set inMainFormTrue, currentQuestionID an currentQuestion
+                this.inMainForm = false;
+                this.currentQuestionID = 'overviewForm';
+                this.$.questionList.render();
+            }
+
+            _isOverview(e) {
+                return this.currentQuestionID === 'overviewForm';
+            }
+
+            _stop() {
+                this.formName = '';
+                window.location.href = '#/app-search';
+            }
+
+            _done() {
+                if (this.currentQuestionID === 'shareForm') {
+                    this.currentQuestionID = 'doneForm';
+                    this.nextText = 'Ga verder';
+                } else if (this.currentQuestionID === 'overviewForm') {
+                    this.inMainForm = true;
+                    this.currentQuestion = this.questions[0];
+                    this._currentQuestionChanged();
+                } else {
+                    this.formName = '';
+                    window.location.href = '#/';
+                }
+            }
+
+            _chatClicked() {
+                this.$.chatPopup.visible = true;
+            }
+
+            _answerUpdate(e) {
+                if (e.detail.answer == null) {
+                    return;
+                }
+                this.nextDisabled = !e.detail.valid;
+                if (this.nextDisabled) {
+                    return;
+                }
+
+                this.displaySkip = false;
+                this.displayNext = true;
+
+                let bind = e.detail.data_properties.bind;
+                let answer = e.detail.answer;
+                let title = e.detail.data_properties.title;
+
+                this.requestedValues[bind] = {
+                    'value': answer,
+                    'title': title,
+                    'goto': e.detail.question_id,
+                };
+                if (e.detail.data_properties.placeholder != null) {
+                    this.requestedValues[bind].placeholder = e.detail.data_properties.placeholder;
+                }
+                if (e.detail.data_properties.type != null) {
+                    this.requestedValues[bind].type = e.detail.data_properties.type;
+                }
+                this._updateCost();
+                let temp = this.requestedValues;
+                this.requestedValues = [];
+                this.requestedValues = temp;
+            }
+
+            _gotoQuestion(e) {
+                this._goToQuestionWithID(e.detail.question_id);
+            }
+
+            _currentQuestionChanged() {
+                this.currentQuestionID = this.currentQuestion.id;
+                this._setPrevNextVisibility();
+            }
+
+            _isTextType(type) {
+                return type === 'text';
+            }
+
+            _isMultiTextType(type) {
+                return type === 'multi_text';
+            }
+
+            _isCalendarType(type) {
+                return type === 'calendar';
+            }
+
+            _isCheckboxGroupType(type) {
+                return type === 'checkbox_group';
+            }
+
+            _isChoiceType(type) {
+                return type === 'choice';
+            }
+
+            _isPhotoDocumentsType(type) {
+                return type === 'documents_photo';
+            }
+
+            _isUploadDocumentsType(type) {
+                return type === 'documents_upload';
+            }
+
+            _isLocationType(type) {
+                return type === 'location';
+            }
+
+            _isMultipleChoiceType(type) {
+                return type === 'multiple_choice';
+            }
+
+            _isDeclarationType(type) {
+                return type === 'declaration';
+            }
+
+            _isRadiobuttonGroupType(type) {
+                return type === 'radiobutton_group';
+            }
+
+            _isUnkown(type) {
+                if (type !== 'text'
+                    && type !== 'documents_upload'
+                    && type !== 'calendar'
+                    && type !== 'checkbox_group'
+                    && type !== 'choice'
+                    && type !== 'multi_text'
+                    && type !== 'location'
+                    && type !== 'multiple_choice'
+                    && type !== 'declaration'
+                    && type !== 'radiobutton_group'
+                    && type !== 'documents_photo') {
+                    console.warn('UKNOWN TYPE: ', type);
+                }
+            }
+
+            /*
+            * Navigation functionality
+            */
+            _setPrevNextVisibility() {
+                this.currentQuestionIndex = this._getIndexOfQuestion(this.currentQuestionID);
+                this.displayNext = true;
+                this.displayPrev = true;
+                this.displaySkip = false;
+                if (this.currentQuestionIndex === 0) {
+                    this.displayPrev = false;
+                }
+                if (this.currentQuestion.type === 'choice'
+                    || this.currentQuestion.type === 'location'
+                    || this.currentQuestion.type === 'multiple_choice'
+                ) {
+                    this.displayNext = false;
+                }
+                if (this.currentQuestion.type === 'documents_photo') {
+                    var element = this.shadowRoot.querySelector('#' + this.currentQuestionID);
+                    if (element.currentPage === 0) {
+                        this.displayNext = false;
+                    }
+                }
+                this._setNextText();
+                this._setNextFunctionality();
+            }
+
+            _setNextFunctionality() {
+                if (this.currentQuestion.optional != null) {
+                    this.displaySkip = true;
+                    this.displayNext = false;
+                }
+
+                let currentQuestionElement = this.shadowRoot.querySelector('[id="' + this.currentQuestionID + '"]');
+                this.nextDisabled = !currentQuestionElement.answerValid;
+            }
+
+            _setNextText() {
+                this.nextText = 'Volgende';
+                if (this.currentQuestionID === 'finalCheck') {
+                    this.nextText = 'Verzend ' + this.title;
+                } else if (this.currentQuestionID === 'shareForm') {
+                    this.nextText = 'Voltooi ' + this.title;
+                } else if (this.currentQuestionID === 'doneForm') {
+                    this.nextText = 'Ga verder';
+                } else if (this.currentQuestionID === 'overviewForm') {
+                    this.nextText = 'Starten';
+                }
+            }
+
+            _getIndexOfQuestion(id) {
+                let returnVal = -1;
+                let counter = 0;
+                this.questions.forEach((question) => {
+                    if (question.id === id) {
+                        returnVal = counter;
+                    }
+                    counter++;
+                });
+                return returnVal;
+            }
+
+            _prev() {
+                if (!this.displayPrev) {
+                    return;
+                }
+                if (this.history.length > 0) {
+                    let previous = this.history.pop();
+                    this.currentQuestion = this.questions[this._getIndexOfQuestion(previous.id)];
+                    this._currentQuestionChanged();
+                }
+            }
+
+            _skip() {
+                if (this.currentQuestion.optional != null) {
+                    this._goToQuestionWithID(this.currentQuestion.optional.goto);
+                }
+            }
+
+            _next() {
+                if (this.currentQuestionID === 'finalCheck') {
+                    this.currentQuestionID = 'shareForm';
+                    this._setNextText();
+                    this.inMainForm = false;
+                    return;
+                }
+                if (this.currentQuestion.next != null) {
+                    this._goToQuestionWithID(this.currentQuestion.next);
+                } else {
+                    this.currentQuestionID = 'finalCheck';
+                }
+            }
+
+            _goToQuestionWithID(id) {
+                this.history.push(this.currentQuestion);
+                this.currentQuestion = this.questions[this._getIndexOfQuestion(id)];
+                this._currentQuestionChanged();
+            }
+
+        }
+
+        window.customElements.define(QuestionForm.is, QuestionForm);
+    </script>
+</dom-module>

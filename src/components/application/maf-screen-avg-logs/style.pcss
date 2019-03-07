@@ -1,0 +1,76 @@
+.Wrapper {
+  width: 100%;
+  float: left;
+}
+.Cards {
+  margin-top: 14px;
+  float: left;
+  width: 100%;
+}
+.Card {
+  width: 100%;
+  font-family: var(--typography-fontFamily);
+  background-color: #F7F7F7;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.CardHead {
+  font-size: 1.3em;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.28;
+  letter-spacing: -0.3px;
+  text-align: left;
+  color: var(--palette-primary-main);
+  padding: 18px 68px 18px 16px;
+}
+.CardIcon {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: var(--palette-secondary-main);
+}
+.CardDataPoint {
+  font-size: 1.1em;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.53;
+  letter-spacing: -0.2px;
+  text-align: left;
+  color: #6A6D7B;
+  padding: 7px 25px 7px 16px;
+  width: calc(100% - 41px);
+  display: flex;
+  justify-content: space-between;
+}
+.CardDataPointLabel {
+  margin-right: 16px;
+}
+.CardDataPointValue {
+  margin-right: 16px;
+  text-align: right;
+}
+.CardMoreButton {
+  font-size: 1.3em;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.28;
+  letter-spacing: -0.4px;
+  color: var(--palette-primary-main);
+  padding: 10px 16px 14px 16px;
+  margin: 6px 18px 0 14px;
+  width: calc(100% - 64px);
+  border-top: solid 1px #ECEDEE;
+  text-align: center;
+  cursor: pointer;
+}
+.CardMoreButton:active {
+  color: var(--palette-secondary-main);
+}

@@ -1,0 +1,34 @@
+<div class="Wrapper">
+  <maf-screen on-back="[[_onBack]]" heading="Mijn machtigingen">
+    <div class="Cards">
+      <dom-repeat items="{{cards}}" as="card">
+        <template>
+          <div class="Card">
+            <div class="CardHead">[[card.procesOmschrijving]]</div>
+            <dom-if if="[[_isSet(card.omschrijving)]]">
+              <template>
+                <div class="CardDataPoint">
+                  <div class="CardDataPointLabel">[[card.omschrijving]]</div>
+                </div>
+              </template>
+            </dom-if>
+            <div class="CardDataPoint">
+              <div class="CardDataPointLabel">Verwerker Organisatie
+              </div>
+              <div class="CardDataPointValue">[[card.verwerkerOrganisatie.handelsnaam]]</div>
+            </div>
+            <dom-repeat items="[[_mapObjToArr(card)]]" as="point" index-as="point_no">
+              <template>
+                <div class="CardDataPoint">
+                  <div class="CardDataPointLabel">[[point.key]]</div>
+                  <div class="CardDataPointValue">[[point.value]]</div>
+                </div>
+              </template>
+            </dom-repeat>
+            <div class="CardMoreButton" on-click="_clickHandler">Bekijk alle gegevens</div>
+          </div>
+        </template>
+      </dom-repeat>
+    </div>
+  </maf-screen>
+</div>
